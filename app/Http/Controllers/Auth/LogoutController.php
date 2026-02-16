@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+
+class LogoutController extends Controller
+{
+    protected $authService;
+    
+   
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+    
+   
+    public function destroy(Request $request)
+    {
+        $this->authService->logout($request);
+        
+        return redirect('/')
+            ->with('success', 'You have been logged out successfully.');
+    }
+}
