@@ -1,4 +1,4 @@
-<?php
+<?php              
 
 namespace App\Http\Middleware;
 
@@ -7,17 +7,10 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
-class authorization
+class Authorization
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @param  string|null  ...$roles
-     */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        // Check if user is authenticated
         if (!Auth::check()) {
             return redirect()->route('login')
                 ->with('error', 'You must be logged in to access this page.');
@@ -25,12 +18,10 @@ class authorization
 
         $user = Auth::user();
 
-        // If no specific roles required, just check authentication
         if (empty($roles)) {
             return $next($request);
         }
 
-        // Check if user has the required role
         if (!in_array($user->role, $roles)) {
             abort(403, 'Unauthorized access. You do not have permission to view this page.');
         }

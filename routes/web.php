@@ -1,36 +1,44 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Laravel\Fortify\Features;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\StudentController;
+
+// Landing Page
+Route::get('/', fn() => Inertia::render('landingpage/index'))->name('landingpage');
+
+//Student
+Route::middleware(['authorization:student'])->group(function () {
+    Route::get('/student', fn() => Inertia::render('landingpage/student/studentlanding'))
+         ->name('student.landing');
+});
+//Fetch data in student landinpage
 
 
-Route::get('/', function () {
-    return Inertia::render('auth/register', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('register');
+Route::middleware(['authorization:student'])->group(function () {
+    Route::get('/student', [StudentController::class, 'index'])
+         ->name('student.landing');
+});
 
-//landing page
+// Tutor
+Route::middleware(['authorization:tutor'])->group(function () {
+    Route::get('/dashboard', fn() => Inertia::render('dashboard'))
+         ->name('tutor.dashboard');
+});
 
-Route::get('/', function () {
-    return Inertia::render('landingpage/index');
-})->name('landingpage');
 
-
-//register
-Route::get('/register', [RegisterController::class, 'create'])->name('register');  
+// Register
+Route::get('/register', [RegisterController::class, 'create'])->name('register');
 Route::post('/register', [RegisterController::class, 'store']);
 
+// Login
+Route::get('/login', fn() => Inertia::render('auth/login'))->name('login');
+Route::post('/login', [LoginController::class, 'store']);
 
-
-Route::get('/login', function () {
-    return Inertia::render('auth/login');
-})->name('login');
-
+// Logout
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [LogoutController::class, 'destroy'])->name('logout');
 });

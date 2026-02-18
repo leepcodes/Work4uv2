@@ -29,15 +29,5 @@ class User extends Authenticatable
         ];
     }
 
-    // Relationship to Student
-    public function student()
-    {
-        return $this->hasOne(Student::class);
-    }
-
-    // Relationship to Tutor
-    public function tutor()
-    {
-        return $this->hasOne(Tutor::class);
-    }
+ 
 }

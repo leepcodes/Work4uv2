@@ -13,6 +13,7 @@ const togglePasswordVisibility = () => {
     showPassword.value = !showPassword.value;
 };
 
+// 👇 Add this
 const submit = () => {
     form.post('/login', {
         onFinish: () => form.reset('password'),
@@ -56,7 +57,8 @@ const submit = () => {
 
 
             
-            <form @submit.prevent="submit" class="space-y-5">
+            
+                <form @submit.prevent="submit" class="space-y-5">
                 <div>
                     <input
                         id="email"
@@ -120,6 +122,11 @@ const submit = () => {
                 >
                     Sign In
                 </button>
+                 <p class="text-center text-xs text-gray-600 pt-2">
+                    No Accounts yet?
+                    <Link href="/terms" class="text-cyan-500 font-bold hover:underline">Register Now</Link>
+                   
+                </p>
 
               
                 <p class="text-center text-xs text-gray-600 pt-2">
