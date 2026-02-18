@@ -6,10 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Services\LoginService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
     public function __construct(protected LoginService $loginService) {}
+
+    public function index()
+    {
+        return Inertia::render('landingpage/tutor/tutorlanding');
+    }
+
 
     public function store(Request $request)
     {
@@ -24,13 +31,6 @@ class LoginController extends Controller
             ]);
         }
 
-        // Redirect based on role
-        $role = Auth::user()->role;
-
-        return match($role) {
-            'student' => redirect()->route('student.landing'),
-            'tutor'   => redirect()->route('tutor.dashboard'),
-            default   => redirect('/'),
-        };
+        return redirect()->route($this->loginService->getRedirectRoute());
     }
 }

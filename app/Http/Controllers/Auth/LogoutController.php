@@ -21,7 +21,7 @@ class LogoutController extends Controller
     {
         $this->authService->logout($request);
         
-        return redirect('/')
+        return redirect('/login')
             ->with('success', 'You have been logged out successfully.');
     }
 }

@@ -236,7 +236,7 @@ const submit = () => {
                         
                         <p class="text-center text-xs text-gray-600 mt-3">
                             Already have an account? 
-                            <Link href="/login" class="text-cyan-500 hover:underline font-medium">Log in</Link>
+                            <Link href="/login" class="text-cyan-500 hover:underline font-bold">Log in</Link>
                         </p>
                     </form>
                 </div>
