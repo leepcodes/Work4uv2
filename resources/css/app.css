@@ -179,196 +179,20 @@
 }
 
 
-/* resources/css/fonts.css */
-
-/* ================================
-   INTER FONT
-   ================================ */
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter,Inter_Tight/Inter/Inter-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter,Inter_Tight/Inter/Inter-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter,Inter_Tight/Inter/Inter-Medium.ttf') format('truetype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter,Inter_Tight/Inter/Inter-SemiBold.ttf') format('truetype');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter,Inter_Tight/Inter/Inter-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ================================
-   INTER TIGHT FONT
-   ================================ */
-@font-face {
-  font-family: 'Inter Tight';
-  src: url('/fonts/Inter,Inter_Tight/Inter_Tight/InterTight-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter Tight';
-  src: url('/fonts/Inter,Inter_Tight/Inter_Tight/InterTight-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter Tight';
-  src: url('/fonts/Inter,Inter_Tight/Inter_Tight/InterTight-Medium.ttf') format('truetype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter Tight';
-  src: url('/fonts/Inter,Inter_Tight/Inter_Tight/InterTight-SemiBold.ttf') format('truetype');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter Tight';
-  src: url('/fonts/Inter,Inter_Tight/Inter_Tight/InterTight-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ================================
-   NUNITO FONT
-   ================================ */
-@font-face {
-  font-family: 'Nunito';
-  src: url('/fonts/Nunito/Nunito-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Nunito';
-  src: url('/fonts/Nunito/Nunito-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Nunito';
-  src: url('/fonts/Nunito/Nunito-Medium.ttf') format('truetype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Nunito';
-  src: url('/fonts/Nunito/Nunito-SemiBold.ttf') format('truetype');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Nunito';
-  src: url('/fonts/Nunito/Nunito-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Nunito';
-  src: url('/fonts/Nunito/Nunito-ExtraBold.ttf') format('truetype');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ================================
-   GLOBAL FONT APPLICATION
-   ================================ */
-
-/* Apply Inter as the default font */
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-weight: 400;
-}
-
-/* You can also apply to all elements */
-* {
-  font-family: 'Inter', sans-serif;
-}
-
-/* Utility classes for easy font switching */
-.font-inter {
-  font-family: 'Inter', sans-serif;
-}
-
-.font-inter-tight {
-  font-family: 'Inter Tight', sans-serif;
-}
-
-.font-nunito {
-  font-family: 'Nunito', sans-serif;
-}
-
-
 /* SCROLL BAR */
 
-
 .custom-scroll::-webkit-scrollbar {
-    height: 4px; 
-    /* display:none; */
+    height: 4px;
 }
 
 .custom-scroll::-webkit-scrollbar-track {
-    /* background: #046bd3;  */
     border-radius: 999px;
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
-    background: #818181; 
+    background: #818181;
     border-radius: 999px;
     cursor: pointer;
-}
-
-.custom-scroll::-webkit-scrollbar-thumb:hover {
-    /* background: #747373;  */
-    
 }
 
 /* TUTOR CARD */
