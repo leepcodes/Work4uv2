@@ -15,9 +15,8 @@ Route::middleware(['authorization:student'])->group(function () {
     Route::get('/student', fn() => Inertia::render('landingpage/student/studentlanding'))
          ->name('student.landing');
 });
+
 //Fetch data in student landinpage
-
-
 Route::middleware(['authorization:student'])->group(function () {
     Route::get('/student', [StudentController::class, 'index'])
          ->name('student.landing');
@@ -25,12 +24,13 @@ Route::middleware(['authorization:student'])->group(function () {
 
 // Tutor
 Route::middleware(['authorization:tutor'])->group(function () {
-    Route::get('/dashboard', fn() => Inertia::render('dashboard'))
+    Route::get('/verification-step-1', [LoginController::class, 'index'])
          ->name('tutor.dashboard');
 });
 
 
 // Register
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::get('/register', [RegisterController::class, 'create'])->name('register');
 Route::post('/register', [RegisterController::class, 'store']);
 

@@ -124,7 +124,7 @@ const submit = () => {
                 </button>
                  <p class="text-center text-xs text-gray-600 pt-2">
                     No Accounts yet?
-                    <Link href="/terms" class="text-cyan-500 font-bold hover:underline">Register Now</Link>
+                    <Link href="/register" class="text-cyan-500 text-bold hover:underline">Register Now</Link>
                    
                 </p>
 

@@ -8,6 +8,13 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+
+    
+    --font-inter: 'Inter', sans-serif;
+    --font-inter-tight: 'Inter Tight', sans-serif;
+    --font-nunito: 'Nunito', sans-serif;
+
+
     --font-sans:
         Instrument Sans, ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
@@ -169,4 +176,31 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+
+/* SCROLL BAR */
+
+.custom-scroll::-webkit-scrollbar {
+    height: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+    border-radius: 999px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: #818181;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+/* TUTOR CARD */
+
+.tutor-card {
+    box-shadow: 0 4px 20px rgba(158, 158, 158, 0.08);
+    transition: box-shadow 0.2s ease;
+}
+.tutor-card:hover {
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.13);
 }

@@ -16,4 +16,13 @@ class LoginService
         $request->session()->regenerate();
         return true;
     }
+
+    public function getRedirectRoute(): string
+    {
+        return match(Auth::user()->role) {
+            'student' => 'student.landing',
+            'tutor'   => 'tutor.dashboard',
+            default   => '/',
+        };
+    }
 }

@@ -12,6 +12,11 @@ class RegisterController extends Controller
 {
     protected $registrationService;
     
+    public function index()
+    {
+        return Inertia::render('auth/register');
+    }
+
     public function __construct(RegistrationService $registrationService)
     {
         $this->registrationService = $registrationService;
@@ -19,7 +24,7 @@ class RegisterController extends Controller
     
     public function create()
     {
-        return Inertia::render('Auth/Register');
+        return Inertia::render('auth/register');
     }
     
     public function store(Request $request)
