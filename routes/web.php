@@ -24,7 +24,7 @@ Route::middleware(['authorization:student'])->group(function () {
 
 // Tutor
 Route::middleware(['authorization:tutor'])->group(function () {
-    Route::get('/verification', [LoginController::class, 'index'])
+    Route::get('/verification-step-1', [LoginController::class, 'index'])
          ->name('tutor.dashboard');
 });
 
