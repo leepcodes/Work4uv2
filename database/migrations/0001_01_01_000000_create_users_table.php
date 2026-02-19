@@ -27,6 +27,7 @@ return new class extends Migration
             $table->binary('certificates')->nullable();
             $table->binary('documents')->nullable();
             $table->boolean('free_class')->default(false);
+            $table->rememberToken();
             $table->timestamps();
         });
     }
