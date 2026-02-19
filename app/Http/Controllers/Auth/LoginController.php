@@ -12,10 +12,6 @@ class LoginController extends Controller
 {
     public function __construct(protected LoginService $loginService) {}
     
-   
-
-
-
     public function store(Request $request)
     {
         $credentials = $request->validate([

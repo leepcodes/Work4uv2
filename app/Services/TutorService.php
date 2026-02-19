@@ -45,13 +45,26 @@ class TutorService
     }
     public function saveStep3(array $data, array $files): void
     {
+        $stored = [];
+
+        if (isset($files['id_front'])) {
+            $stored['id_front'] = $files['id_front']->store('tutor/documents', 'work4u_storage');
+        }
+        if (isset($files['id_back'])) {
+            $stored['id_back'] = $files['id_back']->store('tutor/documents', 'work4u_storage');
+        }
+        if (isset($files['cv_resume'])) {
+            $stored['cv_resume'] = $files['cv_resume']->store('tutor/documents', 'work4u_storage');
+        }
+        if (isset($files['certificates'])) {
+            $stored['certificates'] = collect($files['certificates'])
+                ->map(fn($file) => $file->store('tutor/certificates', 'work4u_storage'))
+                ->toArray();
+        }
+
         auth()->user()->update([
-            'documents'         => json_encode([
-                'id_front'  => $files['id_front'] ?? null,
-                'id_back'   => $files['id_back'] ?? null,
-                'cv_resume' => $files['cv_resume'] ?? null,
-            ]),
-            'certificates'      => json_encode($files['certificates'] ?? []),
+            'documents'         => json_encode($stored),
+            'certificates'      => json_encode($stored['certificates'] ?? []),
             'description'       => $data['description'],
             'verification_step' => 3,
         ]);

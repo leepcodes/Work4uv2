@@ -68,24 +68,10 @@ class TutorVerificationController extends Controller
 
     public function step3Store(TutorVerificationRequest $request)
     {
-        $files = [];
-
-        if ($request->hasFile('id_front')) {
-            $files['id_front'] = $request->file('id_front')->store('tutor/documents', 'public');
-        }
-        if ($request->hasFile('id_back')) {
-            $files['id_back'] = $request->file('id_back')->store('tutor/documents', 'public');
-        }
-        if ($request->hasFile('cv_resume')) {
-            $files['cv_resume'] = $request->file('cv_resume')->store('tutor/documents', 'public');
-        }
-        if ($request->hasFile('certificates')) {
-            $files['certificates'] = collect($request->file('certificates'))
-                ->map(fn($file) => $file->store('tutor/certificates', 'public'))
-                ->toArray();
-        }
-
-        $this->tutorService->saveStep3($request->validated(), $files);
+        $this->tutorService->saveStep3(
+            $request->validated(),
+            $request->files->all()
+        );
 
         return redirect()->route('tutor.verification-complete');
     }
