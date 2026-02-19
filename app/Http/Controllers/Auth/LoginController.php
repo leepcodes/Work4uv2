@@ -11,11 +11,9 @@ use Inertia\Inertia;
 class LoginController extends Controller
 {
     public function __construct(protected LoginService $loginService) {}
+    
+   
 
-    public function index()
-    {
-        return Inertia::render('landingpage/tutor/step1');
-    }
 
 
     public function store(Request $request)
