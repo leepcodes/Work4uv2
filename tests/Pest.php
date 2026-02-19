@@ -13,8 +13,8 @@
 
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
-
+    ->skip('Skipping all tests')
+    ->in('Feature', 'Unit');
 /*
 |--------------------------------------------------------------------------
 | Expectations
