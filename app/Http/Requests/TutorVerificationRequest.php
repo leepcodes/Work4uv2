@@ -34,7 +34,7 @@ class TutorVerificationRequest extends FormRequest
             'city'        => 'required|string|max:100',
             'contact'     => 'required|string',
             'email'       => 'required|email',
-            // 'photo'       => 'nullable|image|max:2048', Wala pa bucket :)
+             'photo'       => 'nullable|image|max:2048',
         ];
     }
 

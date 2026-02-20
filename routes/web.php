@@ -9,18 +9,13 @@ use App\Http\Controllers\Auth\StudentController;
 use App\Http\Controllers\Auth\TutorVerificationController;
 
 // Landing Page
-Route::get('/', fn() => Inertia::render('landingpage/index'))->name('landingpage');
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
 //Student
 Route::middleware(['authorization:student'])->group(function () {
-    Route::get('/student', fn() => Inertia::render('landingpage/student/studentlanding'))
-         ->name('student.landing');
-});
-
-//Fetch data in student landinpage
-Route::middleware(['authorization:student'])->group(function () {
-    Route::get('/student', [StudentController::class, 'index'])
-         ->name('student.landing');
+    Route::get('/student', [StudentController::class, 'index'])->name('student.landing');
 });
 
 // Tutor
