@@ -60,6 +60,18 @@ return [
             'report' => false,
         ],
 
+        'work4u_storage' => [
+            'driver' => 's3',
+            'key' => env('S3_WORK4U_KEY'),
+            'secret' => env('S3_WORK4U_SECRET'),
+            'region' => env('S3_WORK4U_REGION'),
+            'bucket' => env('S3_WORK4U_BUCKET'),
+            'endpoint' => env('S3_WORK4U_ENDPOINT'),
+            'use_path_style_endpoint' => true,
+            'visibility' => 'public',
+            'throw' => true,
+        ],
+
     ],
 
     /*

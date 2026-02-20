@@ -21,7 +21,7 @@ class LoginService
     {
         return match(Auth::user()->role) {
             'student' => 'student.landing',
-            'tutor'   => 'tutor.dashboard',
+            'tutor'   => 'tutor.verification-1',
             default   => '/',
         };
     }

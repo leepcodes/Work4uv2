@@ -13,6 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('role');
             $table->string('firstname');
@@ -21,12 +22,18 @@ return new class extends Migration
             $table->string('birthday')->nullable();
             $table->string('gender')->nullable();
             $table->string('citizenship')->nullable();
+            $table->string('country')->nullable();
+            $table->string('city')->nullable();
             $table->string('contact_number')->nullable();
             $table->string('service')->nullable();
             $table->text('languages')->nullable();
-            $table->binary('certificates')->nullable();
-            $table->binary('documents')->nullable();
+            $table->text('subjects')->nullable();
+            $table->binary('photo')->nullable();
+            $table->text('certificates')->nullable();
+            $table->text('documents')->nullable();
+            $table->text('description')->nullable();
             $table->boolean('free_class')->default(false);
+            $table->integer('verification_step')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

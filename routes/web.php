@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\StudentController;
+use App\Http\Controllers\Auth\TutorVerificationController;
 
 // Landing Page
 Route::get('/', fn() => Inertia::render('landingpage/index'))->name('landingpage');
@@ -23,10 +24,17 @@ Route::middleware(['authorization:student'])->group(function () {
 });
 
 // Tutor
+
+
 Route::middleware(['authorization:tutor'])->group(function () {
-    Route::get('/verification-step-1', [LoginController::class, 'index'])
-         ->name('tutor.dashboard');
+    Route::get('/verification-step-1', [TutorVerificationController::class, 'step1'])->name('tutor.verification-1');
+    Route::post('/verification-step-1', [TutorVerificationController::class, 'step1Store'])->name('tutor.verification-1.store');
+    Route::get('/verification-step-2', [TutorVerificationController::class, 'step2'])->name('tutor.verification-2');
+    Route::post('/verification-step-2', [TutorVerificationController::class, 'step2Store'])->name('tutor.verification-2.store');
+    Route::get('/verification-step-3', [TutorVerificationController::class, 'step3'])->name('tutor.verification-3');
+    Route::post('/verification-step-3', [TutorVerificationController::class, 'step3Store'])->name('tutor.verification-3.store');
 });
+
 
 
 // Register
