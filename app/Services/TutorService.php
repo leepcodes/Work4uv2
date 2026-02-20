@@ -8,6 +8,12 @@ class TutorService
 {
     public function saveStep1(array $data): void
     {
+        $photoPath = null;
+
+        if (isset($data['photo']) && $data['photo'] instanceof \Illuminate\Http\UploadedFile) {
+            $photoPath = $data['photo']->store('photos', 'work4u_storage');
+        }
+
         auth()->user()->update([
             'firstname'         => $data['firstname'],
             'middlename'        => $data['middlename'] ?? null,
@@ -18,7 +24,7 @@ class TutorService
             'country'           => $data['country'],
             'city'              => $data['city'],
             'contact_number'    => $data['contact'],
-            'photo'             => null,
+            'photo'             => $photoPath,
             'verification_step' => 1,
         ]);
     }
