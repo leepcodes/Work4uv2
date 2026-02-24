@@ -1,11 +1,11 @@
-<script>
+<script >
 import Navbar from '@/components/interfaces/navbar.vue'
 import TutoringSidebar from '@/components/interfaces/TutoringSidebar.vue'
-import { Link } from '@inertiajs/vue3';
+import { Link as InertiaLink } from '@inertiajs/vue3';
 
 export default {
   name: 'TutoringMySubjects',
-  components: { Navbar, TutoringSidebar, Link },
+ components: { Navbar, TutoringSidebar, InertiaLink },
 
   data() {
     return {
@@ -96,13 +96,13 @@ export default {
 
     <Navbar />
 
-    <!-- ========== SIDEBAR ========== -->
+    
     <TutoringSidebar
       v-model="sidebarOpen"
       v-model:activeItem="activeItem"
     />
 
-    <!-- Breadcrumb -->
+    
     <div class="flex items-center gap-2 px-6 pt-5 pb-3">
       <button
         @click="sidebarOpen = true"
@@ -115,42 +115,42 @@ export default {
       <span class="text-sm font-bold text-[#139aa2]">Tutoring &gt; My Subject</span>
     </div>
 
-    <!-- ===== MAIN LAYOUT ===== -->
+    
     <div class="flex px-6 pb-6 gap-4 w-full overflow-x-hidden">
 
-      <!-- ===== SUBJECT GRID AREA ===== -->
+      
       <div class="flex-1 min-w-0">
 
-        <!-- Create Subject Button -->
+       
         <div class="flex justify-end mb-4">
-          <Link 
+          <InertiaLink 
           href="/tutor/create-subject"
           class="px-5 py-2 rounded-lg border border-[#139aa2] text-[#139aa2] text-sm font-semibold hover:bg-teal-50 transition-colors">
             Create Subject
-          </Link>
+          </InertiaLink>
         </div>
 
-        <!-- Grid -->
+        
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div
             v-for="subject in subjects"
             :key="subject.id"
             class="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
           >
-            <!-- Image + menu -->
+            
             <div class="relative">
               <img src="/images/tutor.jpg" alt="Subject" class="w-full h-36 object-cover"/>
 
-              <!-- Subject label overlay -->
+              
               <div class="absolute inset-0 bg-black/30 flex items-start justify-between px-3 pt-2">
                 <span class="text-white text-xs font-bold tracking-widest uppercase">Mathematics</span>
-                <!-- Three-dot menu -->
+                
                 <div class="relative">
                   <button
                     @click="toggleMenu(subject.id)"
                     class="text-white text-lg font-bold leading-none px-1 hover:text-slate-200 transition-colors"
                   >···</button>
-                  <!-- Dropdown -->
+                 
                   <div
                     v-if="openMenu === subject.id"
                     class="absolute right-0 top-6 bg-white rounded-lg shadow-lg z-10 py-1 flex flex-col"
@@ -210,7 +210,7 @@ export default {
                 </div>
               </div>
 
-              <!-- Footer -->
+            
               <p class="text-[10px] text-slate-500">{{ subject.students }} Students have bought this course</p>
               <p class="text-[10px] text-slate-500">{{ subject.earnings }} Earnings</p>
             </div>

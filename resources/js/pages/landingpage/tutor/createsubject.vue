@@ -1,10 +1,10 @@
 <script>
 import Navbar from '@/components/interfaces/navbar.vue'
-import { Link } from '@inertiajs/vue3';
+import { Link as InertiaLink } from '@inertiajs/vue3';
 
 export default {
   name: 'TutoringCreateSubject',
-  components: { Navbar, Link },
+  components: { Navbar, InertiaLink },
 
   data() {
     return {
@@ -43,14 +43,14 @@ export default {
 
     <Navbar />
 
-    <!-- Breadcrumb -->
+   
     <div class="flex items-center gap-1 px-6 pt-5 pb-2">
-      <Link
+      <InertiaLink
         href="/tutor/my-subject"
         class="text-[#139aa2] hover:text-teal-600 transition-colors text-sm font-bold"
       >
-        &lt;
-      </Link>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left-icon lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+      </InertiaLink>
       <span class="text-sm font-bold text-[#139aa2] ml-1">Create a New Subject</span>
     </div>
 

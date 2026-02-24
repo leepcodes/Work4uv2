@@ -1,15 +1,63 @@
+<script lang="ts">
+import Navbar from '@/components/interfaces/navbar.vue'
+import TutoringSidebar from '@/components/interfaces/TutoringSidebar.vue'
+
+interface TutoringRequest {
+  id: number
+  name: string
+  subject: string
+  classesRequested: number
+  requestedDate: string
+  message: string
+}
+
+
+export default {
+  name: 'TutoringRequests',
+  components: { Navbar, TutoringSidebar },
+
+  data() {
+    return {
+      sidebarOpen: false,
+      activeItem: 'Requests',
+      activeTab: 'active',
+      search: '',
+      selectedRequest: null as TutoringRequest | null,
+
+      // Replace with v-for over DB fetch later
+      sampleRequest: {
+        id: 1,
+        name: 'Oliver Martinez',
+        subject: 'English',
+        classesRequested: 10,
+        requestedDate: '21-04-2025',
+        message: 'Hello, I would like to request classes with you. I need 6 sessions for the Mathematics subject, and I\'d like to schedule them within this month. Hello, I would like to request classes with you. I need 6 sessions for the Mathematics subject, and I\'d like to schedule them within this month.'
+      }
+    }
+  },
+
+  methods: {
+    selectRequest(request:TutoringRequest) {
+      this.selectedRequest = this.selectedRequest?.id === request.id ? null : request
+    }
+  }
+}
+</script>
+
+
+
 <template>
   <div class="min-h-screen bg-slate-50 font-sans">
 
     <Navbar />
 
-    <!-- ========== SIDEBAR ========== -->
+    
     <TutoringSidebar
       v-model="sidebarOpen"
       v-model:activeItem="activeItem"
     />
 
-    <!-- Breadcrumb -->
+   
     <div class="flex items-center gap-2 px-6 pt-5 pb-3">
       <button
         @click="sidebarOpen = true"
@@ -22,13 +70,13 @@
       <span class="text-sm font-bold text-[#139aa2]">Tutoring &gt; Requests</span>
     </div>
 
-    <!-- ===== THREE COLUMN LAYOUT ===== -->
+    <!-- start ng columns na 3 -->
     <div class="flex px-6 pb-6 gap-4 w-full overflow-x-hidden">
 
-      <!-- ===== REQUEST LIST ===== -->
+      
       <div class="requestlist w-[310px] flex-shrink-0 flex flex-col gap-2">
 
-        <!-- Tabs -->
+        
         <div class="flex gap-6 mb-2 mt-4">
           <button
             @click="activeTab = 'active'"
@@ -42,7 +90,7 @@
           >Rejected</button>
         </div>
 
-        <!-- Search -->
+      
         <div class="relative mb-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"/>
@@ -55,10 +103,10 @@
           />
         </div>
 
-        <!-- Scrollable Cards -->
+        
         <div class="flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-200px)] pr-1">
 
-          <!-- Card — replace with v-for over fetched requests from DB -->
+         
           <div
             @click="selectRequest(sampleRequest)"
             class="bg-white rounded-xl p-3 cursor-pointer border-2 transition-all duration-200 shadow-sm hover:shadow-md"
@@ -78,10 +126,10 @@
         </div>
       </div>
 
-      <!-- ===== MIDDLE CONTAINER ===== -->
+      
       <div class="middlecontainer flex-1 min-w-0 flex justify-center">
 
-        <!-- Detail Panel -->
+        
         <transition
           enter-active-class="transition-all duration-300 ease-out"
           enter-from-class="opacity-0 translate-y-2"
@@ -91,7 +139,7 @@
           leave-to-class="opacity-0 translate-y-2"
         >
           <div v-if="selectedRequest" class="middlecontainer bg-white h-130 w-150 shadow-sm p-6 items-start justify-center">
-            <!-- Header -->
+            
             <div class="flex items-start justify-between mb-5">
               <div class="flex items-center gap-3">
                 <img src="/images/tutor.jpg" class="w-10 h-10 rounded-full object-cover border border-slate-200" alt="Student"/>
@@ -104,7 +152,7 @@
               </button>
             </div>
 
-            <!-- Info Rows -->
+           
             <div class="flex flex-col gap-3 mb-4">
               <div class="flex items-center gap-2">
                 <span class="text-sm text-black font-bold">Requested Date:</span>
@@ -122,10 +170,10 @@
 
             <hr class="border-slate-100 mb-4"/>
 
-            <!-- Message -->
+           
             <p class="text-sm text-slate-600 leading-relaxed mb-8">{{ selectedRequest.message }}</p>
 
-            <!-- Buttons -->
+            
             <div class="flex items-center gap-3 mt-30">
               <button class="flex-1 py-2.5 rounded-xl border-2 border-slate-300 text-sm font-bold text-slate-600 hover:border-red-400 hover:text-red-500 transition-colors tracking-wider">
                 REJECT
@@ -137,7 +185,7 @@
           </div>
         </transition>
 
-        <!-- Empty State -->
+       
         <div v-if="!selectedRequest" class="flex items-center justify-center h-64 text-slate-300">
           <div class="text-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -149,7 +197,7 @@
 
       </div>
 
-      <!-- ===== ADS SECTION ===== -->
+      
       <aside class="hidden lg:flex flex-col flex-shrink-0 w-[200px] p-3">
         <div class="sticky top-[72px]">
           <img
@@ -164,38 +212,3 @@
   </div>
 </template>
 
-<script>
-import Navbar from '@/components/interfaces/navbar.vue'
-import TutoringSidebar from '@/components/interfaces/TutoringSidebar.vue'
-
-export default {
-  name: 'TutoringRequests',
-  components: { Navbar, TutoringSidebar },
-
-  data() {
-    return {
-      sidebarOpen: false,
-      activeItem: 'Requests',
-      activeTab: 'active',
-      search: '',
-      selectedRequest: null,
-
-      // Replace with v-for over DB fetch later
-      sampleRequest: {
-        id: 1,
-        name: 'Oliver Martinez',
-        subject: 'English',
-        classesRequested: 10,
-        requestedDate: '21-04-2025',
-        message: 'Hello, I would like to request classes with you. I need 6 sessions for the Mathematics subject, and I\'d like to schedule them within this month. Hello, I would like to request classes with you. I need 6 sessions for the Mathematics subject, and I\'d like to schedule them within this month.'
-      }
-    }
-  },
-
-  methods: {
-    selectRequest(request) {
-      this.selectedRequest = this.selectedRequest?.id === request.id ? null : request
-    }
-  }
-}
-</script>

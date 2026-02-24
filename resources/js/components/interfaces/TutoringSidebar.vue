@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 export default {
   name: 'TutoringSidebar',
 
@@ -55,7 +55,7 @@ export default {
     close() {
       this.$emit('update:modelValue', false)
     },
-    setActive(name) {
+    setActive(name:string) {
       this.$emit('update:activeItem', name)
     }
   }
