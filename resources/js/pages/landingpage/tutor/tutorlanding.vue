@@ -1,7 +1,8 @@
-<script>
+<script lang="ts">
 import Navbar from '@/components/interfaces/navbar.vue'
 import TutoringSidebar from '@/components/interfaces/TutoringSidebar.vue'
 import VueApexCharts from 'vue3-apexcharts'
+import type { ApexOptions } from 'apexcharts'
 
 export default {
   name: 'TutoringLanding',
@@ -55,7 +56,7 @@ export default {
 
       // ── ApexCharts: Bar (My Orders) ────────────────────────────
       barSeries: [
-        { name: 'Orders', data: [] }
+        { name: 'Orders', data: [] as number[] }
       ],
       barChartOptions: {
         chart: {
@@ -100,14 +101,14 @@ export default {
         },
         tooltip: {
           theme: 'light',
-          y: { formatter: val => `${val} orders` }
+         y: { formatter: (val: number) => `${val} orders` }
         }
-      },
+      } as ApexOptions,
 
       // ── ApexCharts: Area (Earning Summary) ────────────────────
       areaSeries: [
-        { name: 'Last 6 months',        data: [] },
-        { name: 'Same Period Last Year', data: [] }
+        { name: 'Last 6 months',        data: [] as number[] },
+        { name: 'Same Period Last Year', data: [] as number[] }
       ],
       areaChartOptions: {
         chart: {
@@ -144,16 +145,16 @@ export default {
         },
         yaxis: {
           labels: {
-            formatter: val => `$${(val / 1000).toFixed(0)}k`,
+            formatter: (val: number) => `$${(val / 1000).toFixed(0)}k`,
             style: { colors: '#94a3b8', fontSize: '11px', fontFamily: 'inherit' }
           }
         },
         legend: { show: false },
         tooltip: {
           theme: 'light',
-          y: { formatter: val => `$${(val / 1000).toFixed(1)}k` }
+         y: { formatter: (val: number) => `$${(val / 1000).toFixed(1)}k` }
         }
-      }
+      } as ApexOptions
     }
   },
 

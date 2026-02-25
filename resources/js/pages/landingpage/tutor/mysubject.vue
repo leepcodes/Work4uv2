@@ -1,4 +1,4 @@
-<script >
+<script lang="ts" >
 import Navbar from '@/components/interfaces/navbar.vue'
 import TutoringSidebar from '@/components/interfaces/TutoringSidebar.vue'
 import { Link as InertiaLink } from '@inertiajs/vue3';
@@ -11,7 +11,7 @@ export default {
     return {
       sidebarOpen: false,
       activeItem: 'My Subjects',
-      openMenu: null,
+      openMenu: null as string | number | null,
 
       subjects: [
         {
@@ -85,9 +85,9 @@ export default {
   },
 
   methods: {
-    toggleMenu(id) {
-      this.openMenu = this.openMenu === id ? null : id
-    }
+    toggleMenu(id: string | number) {
+    this.openMenu = this.openMenu === id ? null : id
+  }
   }
 }
 </script>
