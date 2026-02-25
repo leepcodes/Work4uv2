@@ -1,6 +1,9 @@
-<script >
+<script lang="ts">
 import Navbar from '@/components/interfaces/navbar.vue'
 import { Link as InertiaLink } from '@inertiajs/vue3';
+
+
+
 
 export default {
   name: 'TutoringCreateSubject',
@@ -8,33 +11,43 @@ export default {
 
   data() {
     return {
-      previewImages: [],
+      previewImages: [] as string[],
       form: {
-        subject:     '',
-        description: '',
-        ageFrom:     '',
-        ageTo:       '',
-        price2:      '',
-        price3:      '',
-        price5:      ''
+        subject:     '' as string,
+        description: '' as string,
+        ageFrom:     '' as string,
+        ageTo:       '' as string,
+        price2:      '' as string,
+        price3:      '' as string,
+        price5:      '' as string,
       }
     }
   },
+  
 
   methods: {
-    handleImageUpload(e) {
-      const files = Array.from(e.target.files)
+    handleImageUpload(e: Event) {
+      const input = e.target as HTMLInputElement
+      if (!input.files) return
+      const files = Array.from(input.files)
       const remaining = 5 - this.previewImages.length
-      files.slice(0, remaining).forEach(file => {
+      files.slice(0, remaining).forEach((file: File) => {
         const reader = new FileReader()
-        reader.onload = ev => this.previewImages.push(ev.target.result)
+        reader.onload = (ev: ProgressEvent<FileReader>) => {
+          if (ev.target?.result) {
+            this.previewImages.push(ev.target.result as string)
+          }
+        }
         reader.readAsDataURL(file)
       })
     },
-    removeImage(index) {
+    removeImage(index: number) {
       this.previewImages.splice(index, 1)
     }
   }
+
+
+  
 }
 </script>
 
@@ -131,7 +144,7 @@ export default {
           <label class="block text-xs font-semibold text-slate-700 mb-2">Preview</label>
           <div
             class="border border-slate-200 rounded-xl bg-slate-50 flex flex-col items-center justify-center py-10 cursor-pointer hover:border-teal-300 hover:bg-teal-50/20 transition-colors"
-            @click="$refs.fileInput.click()"
+            @click="($refs.fileInput as HTMLInputElement).click()"
           >
             <div class="w-10 h-10 rounded-full border-2 border-[#139aa2] flex items-center justify-center mb-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#139aa2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
