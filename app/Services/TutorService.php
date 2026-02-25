@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class TutorService
 {
@@ -11,7 +12,7 @@ class TutorService
         $photoPath = null;
 
         if (isset($data['photo']) && $data['photo'] instanceof \Illuminate\Http\UploadedFile) {
-            $photoPath = $data['photo']->store('photos', 'work4u_storage');
+            $photoPath = Storage::disk('work4u_storage')->putFile('tutor/profile', $data['photo']);
         }
 
         auth()->user()->update([
@@ -49,28 +50,46 @@ class TutorService
             'subjects'  => $user->subjects ?? '',
         ];
     }
+    
+
+
+
     public function saveStep3(array $data, array $files): void
     {
         $stored = [];
 
-        if (isset($files['id_front'])) {
+        
+        if (!empty($files['id_front']) && $files['id_front'] instanceof \Illuminate\Http\UploadedFile && $files['id_front']->isValid()) {
             $stored['id_front'] = $files['id_front']->store('tutor/documents', 'work4u_storage');
         }
-        if (isset($files['id_back'])) {
+
+        if (!empty($files['id_back']) && $files['id_back'] instanceof \Illuminate\Http\UploadedFile && $files['id_back']->isValid()) {
             $stored['id_back'] = $files['id_back']->store('tutor/documents', 'work4u_storage');
         }
-        if (isset($files['cv_resume'])) {
+
+        if (!empty($files['cv_resume']) && $files['cv_resume'] instanceof \Illuminate\Http\UploadedFile && $files['cv_resume']->isValid()) {
             $stored['cv_resume'] = $files['cv_resume']->store('tutor/documents', 'work4u_storage');
         }
-        if (isset($files['certificates'])) {
+
+        if (!empty($files['certificates']) && is_array($files['certificates'])) {
             $stored['certificates'] = collect($files['certificates'])
+                ->filter(fn($file) =>
+                    $file instanceof \Illuminate\Http\UploadedFile && $file->isValid()
+                )
                 ->map(fn($file) => $file->store('tutor/certificates', 'work4u_storage'))
+                ->values()
                 ->toArray();
         }
 
-        auth()->user()->update([
-            'documents'         => json_encode($stored),
-            'certificates'      => json_encode($stored['certificates'] ?? []),
+    
+        $user = auth()->user();
+        $existingDocuments = json_decode($user->documents ?? '[]', true) ?? [];
+
+        $mergedDocuments = array_merge($existingDocuments, $stored);
+
+        $user->update([
+            'documents'         => json_encode($mergedDocuments),
+            'certificates'      => json_encode($stored['certificates'] ?? json_decode($user->certificates ?? '[]', true) ?? []),
             'description'       => $data['description'],
             'verification_step' => 3,
         ]);

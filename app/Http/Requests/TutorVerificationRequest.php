@@ -49,12 +49,16 @@ class TutorVerificationRequest extends FormRequest
 
     private function step3Rules(): array{
     
-        return [
-            'id_front'     => 'required|file|max:2048',
-            'id_back'      => 'nullable|file|max:2048',
-            'cv_resume'    => 'nullable|file|max:2048',
-            'certificates' => 'nullable|array',
-            'description'  => 'required|string|max:5000',
-        ];
+         return [
+        
+        'description' => ['required', 'string', 'max:2000'],
+
+       
+        'id_front'    => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+        'id_back'     => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+        'cv_resume'   => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf,doc,docx', 'max:10240'],
+        'certificates'   => ['nullable', 'array'],
+        'certificates.*' => ['file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+    ];
     }
 }

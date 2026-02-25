@@ -33,13 +33,14 @@ const toggleProfileMenu = () => {
                 
                 <div class="hidden md:flex items-center space-x-8">
                    <Link 
-                        href="/dashboard" 
+                       href="/tutor/landing"
                         class="font-inter text-[15px] font-normal text-black tracking-wider"
+                         @click="() => console.log('Home link clicked — navigating to /tutor/landing')"
                     >
                         Home
                     </Link>
                     <Link 
-                        href="/cars" 
+                       href="/tutor/request"
                         class="font-inter text-[15px] font-normal text-black tracking-wider"
                     >
                         Tutoring

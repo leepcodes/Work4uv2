@@ -90,17 +90,17 @@ const submit = () => {
                 </div>
             </div>
 
-            <!-- Form Content -->
+            
             <div class="flex-1 flex justify-center">
                 <div class="w-full max-w-2xl">
 
                     <form @submit.prevent="submit">
 
-                        <!-- Languages -->
+                        
                         <div class="mb-6">
                             <h2 class="text-xs font-bold text-gray-700 uppercase tracking-widest mb-4">Languages</h2>
 
-                            <!-- Dropdown -->
+                           
                             <div class="relative w-72 mb-1">
                                 <button
                                     type="button"
@@ -114,7 +114,7 @@ const submit = () => {
                                     </svg>
                                 </button>
 
-                                <!-- Dropdown List -->
+                                
                                 <div v-if="dropdownOpen" class="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                                     <div
                                         v-for="lang in availableLanguages"
@@ -133,7 +133,7 @@ const submit = () => {
                             <p v-if="form.errors.languages" class="text-xs text-red-400 mt-1">{{ form.errors.languages }}</p>
                             <p class="text-xs text-[#007582] italic mb-3">(You can select more then one language)</p>
 
-                            <!-- Selected Language Tags -->
+                            
                             <div class="flex flex-wrap gap-2 mb-4">
                                 <span
                                     v-for="lang in form.languages"
@@ -145,7 +145,7 @@ const submit = () => {
                                 </span>
                             </div>
 
-                            <!-- Subjects -->
+                            
                             <textarea
                                 v-model="form.subjects"
                                 placeholder="French, Math, x y z"
@@ -154,7 +154,7 @@ const submit = () => {
                             ></textarea>
                         </div>
 
-                        <!-- Services -->
+                        
                         <div class="mb-10">
                             <h2 class="text-xs font-bold text-gray-700 uppercase tracking-widest mb-4">What Services Are You Going to Provide</h2>
 
@@ -185,7 +185,7 @@ const submit = () => {
                             <p class="text-xs text-red-400 italic mt-2">Required, you can select more then one.*</p>
                         </div>
 
-                        <!-- Buttons -->
+                       
                         <div class="flex justify-end gap-3">
                             <button
                                 type="button"

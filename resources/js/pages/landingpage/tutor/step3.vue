@@ -79,16 +79,16 @@ const submit = () => {
 
                     <form @submit.prevent="submit">
 
-                        <!-- Header -->
+                       
                         <div class="flex items-start justify-between mb-6">
                             <h2 class="text-xs font-bold text-gray-700 uppercase tracking-widest">Upload Your Documents</h2>
                             <p class="text-xs text-red-400 italic">ID and Picture required, CV, certification and presentation recommended*</p>
                         </div>
 
-                        <!-- Upload Fields -->
+                        
                         <div class="flex flex-col gap-6 mb-8">
 
-                            <!-- ID Front -->
+                            
                             <div>
                                 <p class="text-sm font-semibold text-gray-700 mb-1">ID Card (FRONT)</p>
                                 <p class="text-xs text-gray-400 mb-2">Upload clear photo of the front side of your ID card.</p>
@@ -105,7 +105,7 @@ const submit = () => {
                                 <p v-if="form.errors.id_front" class="text-xs text-red-400 mt-1">{{ form.errors.id_front }}</p>
                             </div>
 
-                            <!-- ID Back -->
+                            
                             <div>
                                 <p class="text-sm font-semibold text-gray-700 mb-1">ID Card (Back) <span class="text-gray-400 font-normal">Optional</span></p>
                                 <p class="text-xs text-gray-400 mb-2">Upload clear photo of the back side of your ID card.</p>
@@ -121,7 +121,7 @@ const submit = () => {
                                 </label>
                             </div>
 
-                            <!-- CV / Resume -->
+                            
                             <div>
                                 <p class="text-sm font-semibold text-gray-700 mb-1">CV/ Resume</p>
                                 <p class="text-xs text-gray-400 mb-2">Upload your CV or Resume.</p>
@@ -137,7 +137,7 @@ const submit = () => {
                                 </label>
                             </div>
 
-                            <!-- Certifications -->
+                            
                             <div>
                                 <p class="text-sm font-semibold text-gray-700 mb-1">Certifications/Presentations</p>
                                 <p class="text-xs text-gray-400 mb-2">Upload your certifications or presentations.</p>
@@ -173,7 +173,7 @@ const submit = () => {
 
                         </div>
 
-                        <!-- Description -->
+                        
                         <div class="mb-10">
                             <div class="flex items-center gap-3 mb-3">
                                 <p class="text-sm font-semibold text-gray-700">Describe your skills, approach, your teaching method and tell us why a student should you! (max 5000 characters)</p>
@@ -183,13 +183,13 @@ const submit = () => {
                                 v-model="form.description"
                                 maxlength="5000"
                                 rows="6"
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 placeholder-gray-300 focus:outline-none focus:border-[#007582] transition-colors resize-none"
+                                class="w-full px-4 py-3 rounded-xl border border-black bg-white text-sm text-gray-700 placeholder-gray-300 focus:outline-none focus:border-[#007582] transition-colors resize-none"
                                 :class="{ 'border-red-400': form.errors.description }"
                             ></textarea>
                             <p v-if="form.errors.description" class="text-xs text-red-400 mt-1">{{ form.errors.description }}</p>
                         </div>
 
-                        <!-- Buttons -->
+                        
                         <div class="flex justify-end gap-3">
                             <button
                                 type="button"
