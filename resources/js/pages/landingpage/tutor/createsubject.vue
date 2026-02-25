@@ -1,4 +1,4 @@
-<script>
+<script >
 import Navbar from '@/components/interfaces/navbar.vue'
 import { Link as InertiaLink } from '@inertiajs/vue3';
 
