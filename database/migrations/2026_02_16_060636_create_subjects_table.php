@@ -11,13 +11,14 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->unsignedBigInteger('tutor_id');
             $table->string('subject_title');
             $table->string('class_start')->nullable();
             $table->string('suitable_age')->nullable();
             $table->string('currently_enrolled')->nullable();
             $table->text('description')->nullable();
-            $table->binary('image_file')->nullable();
+            $table->text('image_file')->nullable();
             $table->integer('two_class')->nullable();
             $table->integer('three_class')->nullable();
             $table->integer('five_class')->nullable();

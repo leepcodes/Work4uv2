@@ -9,29 +9,31 @@ use App\Http\Controllers\Auth\StudentController;
 use App\Http\Controllers\Auth\TutorVerificationController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\TutorController;
 
 // Landing Page
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-//Student
+// Student
 Route::middleware(['authorization:student'])->group(function () {
     Route::get('/student', [StudentController::class, 'index'])->name('student.landing');
+    Route::get('/tutor/profile/{uuid}', [StudentController::class, 'profile'])->name('tutor.profile');
+    Route::get('/subject/{uuid}', [SubjectController::class, 'showmysubj'])->name('subject.show');
+
+    // Request tutoring
+
+    Route::get('/student/request', [RequestController::class, 'requests'])->name('student.request');
+    Route::post('/subject/request', [RequestController::class, 'store'])->name('subject.request.store');
 });
 
 // Tutor
-
-
 Route::middleware(['authorization:tutor'])->group(function () {
 
-    // INA ALAM KUNG SAN MAG REREDIRECT 
     Route::get('/tutor', [TutorVerificationController::class, 'index'])->name('tutor.index');
-
-    // VERIFIED NA
     Route::get('/tutor/landing', [TutorVerificationController::class, 'landing'])->name('tutor.landing');
 
-    // STEP
     Route::get('/verification-step-1',  [TutorVerificationController::class, 'step1'])->name('tutor.verification-1');
     Route::post('/verification-step-1', [TutorVerificationController::class, 'step1Store'])->name('tutor.verification-1.store');
 
@@ -41,18 +43,17 @@ Route::middleware(['authorization:tutor'])->group(function () {
     Route::get('/verification-step-3',  [TutorVerificationController::class, 'step3'])->name('tutor.verification-3');
     Route::post('/verification-step-3', [TutorVerificationController::class, 'step3Store'])->name('tutor.verification-3.store');
 
-    //REQUEST
-     Route::get('/tutor/request', [RequestController::class, 'requests'])->name('tutor.request');
-    //MY SUBJECT
-     Route::get('/tutor/my-subject', [SubjectController::class, 'subject'])->name('tutor.subject');
-    //CREATE SUBJECT 
-     Route::get('/tutor/create-subject', [SubjectController::class, 'createsubject'])->name('tutor.create-subject');
-});
+    
+    Route::get('/tutor/my-subject', [SubjectController::class, 'subject'])->name('tutor.subject');
+    Route::get('/tutor/create-subject', [SubjectController::class, 'createsubject'])->name('tutor.create-subject');
+    Route::post('/tutor/subjects/store', [SubjectController::class, 'store'])->name('tutor.subjects.store');
 
+    Route::get('/tutor/request', [RequestController::class, 'tutorRequests'])->name('tutor.request');    
+    
+});
 
 // Register
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
-Route::get('/register', [RegisterController::class, 'create'])->name('register');
 Route::post('/register', [RegisterController::class, 'store']);
 
 // Login

@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
+
+const page = usePage();
+const role = (page.props.auth as any)?.role;
 
 const showNotifications = ref(false);
 const showProfileMenu = ref(false);
@@ -19,7 +22,7 @@ const toggleProfileMenu = () => {
 <template>
     <nav class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
+            <div class="flex  items-center h-20">
                 <!-- Logo -->
                 <div class="flex items-center">
                     <Link href="/" class="flex items-center">
@@ -31,34 +34,45 @@ const toggleProfileMenu = () => {
                 </div>
 
                 
-                <div class="hidden md:flex items-center space-x-8">
-                   <Link 
-                       href="/tutor/landing"
+                <div class="hidden  px-10 gap-10 md:flex items-center space-x-8 justify-start self-center">
+                  <Link 
+                        :href="role === 'tutor' ? '/tutor/landing' : '/student'"
                         class="font-inter text-[15px] font-normal text-black tracking-wider"
-                         @click="() => console.log('Home link clicked — navigating to /tutor/landing')"
                     >
                         Home
                     </Link>
-                    <Link 
-                       href="/tutor/request"
+
+                     <Link 
+                        :href="role === 'tutor' ? '/tutor/request' : '/student/request'"
                         class="font-inter text-[15px] font-normal text-black tracking-wider"
                     >
                         Tutoring
                     </Link>
+                     <Link 
+                        v-if="role === 'student'"
+                        href="/student/questions"
+                        class="font-inter text-[15px] font-normal text-black tracking-wider"
+                    >
+                        Questions
+                    </Link>   
                     <Link 
+                        v-if="role === 'tutor'"
                         href="/bookings" 
                         class="font-inter text-[15px] font-normal text-black tracking-wider"
                     >
                         Webinairs
                     </Link>
-                     <Link 
+
+                    <Link 
+                        v-if="role === 'tutor'"
                         href="/bookings" 
                         class="font-inter text-[15px] font-normal text-black tracking-wider"
                     >
                         E-learnings
                     </Link>
 
-                       <Link 
+                    <Link 
+                        v-if="role === 'tutor'"
                         href="/bookings" 
                         class="font-inter text-[15px] font-normal text-black tracking-wider"
                     >
@@ -67,7 +81,7 @@ const toggleProfileMenu = () => {
                 </div>
 
                 
-                <div class="flex items-center space-x-4">
+                <div class="flex ml-auto  space-x-4">
                     
                     <button class="relative p-2 text-gray-500 hover:text-gray-900 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,16 +101,17 @@ const toggleProfileMenu = () => {
                         <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                     </button>
 
-                    
-                    <button 
+                   
+                   <button 
                         @click="toggleProfileMenu" 
                         class="relative"
                     >
-                        <img 
-                            src="https://ui-avatars.com/api/?name=John+Doe&background=3b82f6&color=fff" 
-                            alt="Profile" 
-                            class="w-10 h-10 rounded-full object-cover ring-2 ring-gray-200 hover:ring-blue-400 transition-all"
-                        />
+                    
+                       <img 
+                        :src="(page.props.auth as any)?.photoUrl ?? '/images/tutor.jpg'" 
+                        alt="Profile" 
+                        class="w-10 h-10 rounded-full object-cover ring-2 ring-gray-200 hover:ring-blue-400 transition-all"
+                    />
                     </button>
 
                     

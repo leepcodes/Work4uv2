@@ -10,7 +10,12 @@ class StudentService
     public function getTutors(): Collection
     {
         return User::where('role', 'tutor')
-            ->select('id', 'firstname', 'lastname') ->get();
-            
+            ->select('id', 'uuid', 'firstname', 'lastname', 'photo')
+            ->get();
+    }
+
+    public function getTutorByUuid(string $uuid): User
+    {
+        return User::where('uuid', $uuid)->firstOrFail();
     }
 }

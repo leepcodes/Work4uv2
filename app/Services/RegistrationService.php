@@ -9,6 +9,7 @@ use App\Models\Tutor;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class RegistrationService
 {
@@ -46,6 +47,7 @@ class RegistrationService
     protected function createUser(array $data): User
     {
         return User::create([
+            'uuid' => Str::uuid(),
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -59,7 +61,8 @@ class RegistrationService
     
     protected function createStudentProfile(User $user): Student
     {
-        return Student::create([
+            return Student::create([
+            'uuid' => Str::uuid(),
             'user_id' => $user->id,
             'class_request_count' => 0,
             'subjects' => null,
@@ -71,6 +74,7 @@ class RegistrationService
     protected function createTutorProfile(User $user, array $data): Tutor
     {
         return Tutor::create([
+            'uuid' => Str::uuid(),
             'user_id' => $user->id,
             'username' => $user->username,
             'student_count' => 0,

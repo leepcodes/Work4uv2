@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import Navbar from '@/components/interfaces/navbar.vue';
 
 defineProps<{
     tutors: Array<{
+        uuid : string;
         id: number;
         firstname: string;
         lastname: string;
         avatar: string;
-        tag: string;
+      
     }>;
 }>();
 </script>
@@ -33,31 +34,30 @@ defineProps<{
             </div>
            
 
-            <div class="flex  gap-10   overflow-x-auto pb-2 px-10 pt-10 pb-10 custom-scroll  ">
-                <div
+            <div class="flex  gap-10 overflow-x-auto pb-2 px-10 pt-10 pb-10 custom-scroll  ">
+                <Link
                     v-for="tutor in tutors"
                     :key="tutor.id"
-                    class="tutor-card   flex-shrink-0 flex flex-col items-center gap-2 p-4  rounded-2xl w-45 cursor-pointer"
-                >
+                    :href="`/tutor/profile/${tutor.uuid}`"
+                    class="tutor-card flex-shrink-0 flex flex-col items-center gap-2 p-4 rounded-2xl w-45 cursor-pointer"
+                    >
                     <!-- Circular Avatar -->
                     <div class="w-20 h-20 rounded-full overflow-hidden">
                         <img
-                            :src="tutor.avatar || '/images/tutor.jpg'"
-                            :alt="tutor.firstname"
-                            class="w-full h-full object-cover"
+                        :src="tutor.avatar || '/images/tutor.jpg'"
+                        :alt="tutor.firstname"
+                        class="w-full h-full object-cover"
                         />
                     </div>
 
-                    <!-- Name -->
                     <span class="text-sm font-semibold text-gray-800 text-center leading-tight">
                         {{ tutor.firstname }} {{ tutor.lastname }}
                     </span>
 
-                    
                     <span class="text-[11px] font-semibold text-cyan-500 border border-cyan-400 px-3 py-1 rounded-full flex items-center gap-1 whitespace-nowrap">
-                        <!-- Wala pa Function --> ✦ {{ tutor.tag || 'NEW WEBINAR' }}
+                        <!-- ✦ {{ tutor.tag || 'NEW WEBINAR' }} --> ✦ 'NEW WEBINAR'
                     </span>
-                </div>
+                </Link>
             </div>
 
             <!-- ads section -->

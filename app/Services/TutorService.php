@@ -103,4 +103,14 @@ class TutorService
             'description' => $user->description ?? '',
         ];
     }
+
+   
+    
+    // public function getTutorSubjects(int $tutorId): array
+    // {
+    //     $user = User::with('subjects')->findOrFail($tutorId);
+    //     return $user->subjects->toArray();
+    // }
+
+   
 }

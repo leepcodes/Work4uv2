@@ -1,93 +1,45 @@
-<script lang="ts" >
+<script lang="ts">
 import Navbar from '@/components/interfaces/navbar.vue'
 import TutoringSidebar from '@/components/interfaces/TutoringSidebar.vue'
 import { Link as InertiaLink } from '@inertiajs/vue3';
+import Ads from '@/components/interfaces/ads.vue'
 
 export default {
   name: 'TutoringMySubjects',
- components: { Navbar, TutoringSidebar, InertiaLink },
+  components: { Navbar, TutoringSidebar, InertiaLink, Ads },
+
+  props: {
+    subjects: {
+      type: Array as () => Array<{
+        id: number
+        title: string
+        status: string | null
+        image: string | null
+        students: number
+        earnings: string
+        packages: Array<{
+          label: string
+          price: string
+          sub: string
+          color: string
+        }>
+      }>,
+      default: () => [],
+    },
+  },
 
   data() {
     return {
       sidebarOpen: false,
       activeItem: 'My Subjects',
       openMenu: null as string | number | null,
-
-      subjects: [
-        {
-          id: 1,
-          status: null,
-          students: 4,
-          earnings: '1.0K USD',
-          packages: [
-            { label: '2 Class', price: 'USD 20', sub: '10/class', color: 'bg-teal-400' },
-            { label: '3 Class', price: 'USD 20', sub: '10/class', color: 'bg-purple-400' },
-            { label: '5 Class', price: 'USD 20', sub: '10/class', color: 'bg-violet-500' }
-          ]
-        },
-        {
-          id: 2,
-          status: null,
-          students: 4,
-          earnings: '1.0K USD',
-          packages: [
-            { label: '2 Class', price: 'USD 20', sub: '10/class', color: 'bg-teal-400' },
-            { label: '3 Class', price: 'USD 27', sub: '9/class',  color: 'bg-purple-400' },
-            { label: '5 Class', price: 'USD 29', sub: '8/class',  color: 'bg-violet-500' }
-          ]
-        },
-        {
-          id: 3,
-          status: null,
-          students: 4,
-          earnings: '3.8K USD',
-          packages: [
-            { label: '2 Class', price: 'USD 20', sub: '10/class', color: 'bg-teal-400' },
-            { label: '3 Class', price: 'USD 20', sub: '10/class', color: 'bg-purple-400' },
-            { label: '5 Class', price: 'USD 20', sub: '10/class', color: 'bg-violet-500' }
-          ]
-        },
-        {
-          id: 4,
-          status: 'Not Approved',
-          students: 4,
-          earnings: '1.0K USD',
-          packages: [
-            { label: '2 Class', price: 'USD 20', sub: '10/class', color: 'bg-teal-400' },
-            { label: '3 Class', price: 'USD 20', sub: '10/class', color: 'bg-purple-400' },
-            { label: '5 Class', price: 'USD 20', sub: '10/class', color: 'bg-violet-500' }
-          ]
-        },
-        {
-          id: 5,
-          status: 'Paused',
-          students: 4,
-          earnings: '1.0K USD',
-          packages: [
-            { label: '2 Class', price: 'USD 20', sub: '10/class', color: 'bg-teal-400' },
-            { label: '3 Class', price: 'USD 20', sub: '10/class', color: 'bg-purple-400' },
-            { label: '5 Class', price: 'USD 20', sub: '10/class', color: 'bg-violet-500' }
-          ]
-        },
-        {
-          id: 6,
-          status: 'Waiting for Approval',
-          students: 4,
-          earnings: '1.0K USD',
-          packages: [
-            { label: '2 Class', price: 'USD 20', sub: '10/class', color: 'bg-teal-400' },
-            { label: '3 Class', price: 'USD 20', sub: '10/class', color: 'bg-purple-400' },
-            { label: '5 Class', price: 'USD 20', sub: '10/class', color: 'bg-violet-500' }
-          ]
-        }
-      ]
     }
   },
 
   methods: {
     toggleMenu(id: string | number) {
-    this.openMenu = this.openMenu === id ? null : id
-  }
+      this.openMenu = this.openMenu === id ? null : id
+    }
   }
 }
 </script>
@@ -139,12 +91,11 @@ export default {
           >
             
             <div class="relative">
-              <img src="/images/tutor.jpg" alt="Subject" class="w-full h-36 object-cover"/>
+              <img :src="subject.image ?? '/images/tutor.jpg'" alt="Subject" class="w-full h-36 object-cover"/>
 
               
               <div class="absolute inset-0 bg-black/30 flex items-start justify-between px-3 pt-2">
-                <span class="text-white text-xs font-bold tracking-widest uppercase">Mathematics</span>
-                
+                <span class="text-white text-xs font-bold tracking-widest uppercase">{{ subject.title }}</span>                
                 <div class="relative">
                   <button
                     @click="toggleMenu(subject.id)"
@@ -180,11 +131,11 @@ export default {
               </div>
             </div>
 
-            <!-- Card Body -->
+            <!-- CARD PARA SA MGA SUBJECTS NA GINAWA NETONG SPECIFIC TUTOR-->
             <div class="p-3">
-              <!-- Subject name + status badge -->
+              
               <div class="flex items-center gap-2 mb-2">
-                <h3 class="text-sm font-bold text-slate-800">Mathematics</h3>
+                <h3 class="text-sm font-bold text-slate-800">{{ subject.title }}</h3>
                 <span
                   v-if="subject.status"
                   class="text-[10px] font-semibold px-2 py-0.5 rounded-full"
@@ -214,20 +165,13 @@ export default {
               <p class="text-[10px] text-slate-500">{{ subject.students }} Students have bought this course</p>
               <p class="text-[10px] text-slate-500">{{ subject.earnings }} Earnings</p>
             </div>
+
           </div>
         </div>
       </div>
 
       <!-- ===== ADS SIDEBAR ===== -->
-      <aside class="hidden lg:flex flex-col flex-shrink-0 w-[200px] p-3">
-        <div class="sticky top-[72px]">
-          <img
-            src="/images/adsbanner.png"
-            alt="Advertisement"
-            class="w-full block h-[550px]"
-          />
-        </div>
-      </aside>
+        <Ads/>
 
     </div>
   </div>

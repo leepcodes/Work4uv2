@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('subject_id');
-            $table->unsignedBigInteger('tutor_id');
+            $table->uuid('tutor_id'); 
             $table->text('message')->nullable();
             $table->integer('custom_class_count')->nullable();
             $table->decimal('tutor_custom_price', 10, 2)->nullable();

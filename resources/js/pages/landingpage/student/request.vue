@@ -28,7 +28,7 @@ export default {
       // Replace with v-for over DB fetch later
       sampleRequest: {
         id: 1,
-        name: 'TUTOR REQ',
+        name: 'STUDENT REQUEST',
         subject: 'English',
         classesRequested: 10,
         requestedDate: '21-04-2025',
@@ -117,7 +117,7 @@ export default {
           >
             <div class="flex items-center gap-2 mb-2">
               <img src="/images/tutor.jpg" class="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-slate-200" alt="Oliver Martinez"/>
-              <span class="text-sm font-bold text-slate-800 truncate">TUTOR REQ</span>
+              <span class="text-sm font-bold text-slate-800 truncate">STUDENT REQ</span>
             </div>
             <p class="text-xs text-slate-500 mb-0.5">Subject: <span class="font-bold text-slate-700">English</span></p>
             <p class="text-xs text-slate-500 mb-1">Classes Requested: <span class="font-bold text-slate-700">10</span></p>
