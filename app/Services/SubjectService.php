@@ -83,6 +83,7 @@ class SubjectService
             'five_class'  => $subject->five_class,
             'students'    => $subject->students_count ?? 0,
             'tutor' => [
+                'id'        => $subject->tutor->id,
                 'uuid'      => $subject->tutor->uuid,
                 'firstname' => $subject->tutor->firstname,
                 'lastname'  => $subject->tutor->lastname,

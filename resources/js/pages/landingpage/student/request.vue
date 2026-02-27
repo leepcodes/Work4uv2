@@ -2,20 +2,33 @@
 import Navbar from '@/components/interfaces/navbar.vue'
 import TutoringSidebar from '@/components/interfaces/TutoringSidebar.vue'
 import Ads from '@/components/interfaces/ads.vue'
+import { router } from '@inertiajs/vue3'
 
 interface TutoringRequest {
   id: number
-  name: string
-  subject: string
-  classesRequested: number
-  requestedDate: string
+  tutor: {
+    username: string
+    photo?: string | null
+  }
+  subject: { subject_title: string }
+  custom_class_count: number
+  created_at: string
   message: string
+  status: string
+  tutor_custom_price?: number | null
+  offer_message?: string | null
 }
 
-
 export default {
-  name: 'TutoringRequests',
-  components: { Navbar, TutoringSidebar , Ads},
+  name: 'StudentRequests',
+  components: { Navbar, TutoringSidebar, Ads },
+
+  props: {
+    requests: {
+      type: Array as () => TutoringRequest[],
+      default: () => [],
+    },
+  },
 
   data() {
     return {
@@ -24,41 +37,69 @@ export default {
       activeTab: 'active',
       search: '',
       selectedRequest: null as TutoringRequest | null,
-
-      // Replace with v-for over DB fetch later
-      sampleRequest: {
-        id: 1,
-        name: 'STUDENT REQUEST',
-        subject: 'English',
-        classesRequested: 10,
-        requestedDate: '21-04-2025',
-        message: 'Hello, I would like to request classes with you. I need 6 sessions for the Mathematics subject, and I\'d like to schedule them within this month. Hello, I would like to request classes with you. I need 6 sessions for the Mathematics subject, and I\'d like to schedule them within this month.'
-      }
     }
   },
 
+  computed: {
+    filteredRequests(): TutoringRequest[] {
+      return this.requests.filter((r) =>
+        r.tutor.username.toLowerCase().includes(this.search.toLowerCase())
+      )
+    },
+  },
+
+  watch: {
+    activeTab(newTab) {
+      const status = newTab === 'active' ? 'offered' : 'rejected'
+      router.get(
+        '/student/request',
+        { status },
+        { preserveState: true, replace: true }
+      )
+      this.selectedRequest = null
+    },
+  },
+
   methods: {
-    selectRequest(request:TutoringRequest) {
+    selectRequest(request: TutoringRequest) {
       this.selectedRequest = this.selectedRequest?.id === request.id ? null : request
-    }
-  }
+    },
+
+    formatDate(dateStr: string): string {
+      return new Date(dateStr).toLocaleDateString('en-GB')
+    },
+
+    declineOffer() {
+      if (!this.selectedRequest) return
+      router.post('/student/request/decline', {
+        request_id: this.selectedRequest.id,
+      }, {
+        onSuccess: () => { this.selectedRequest = null }
+      })
+    },
+
+    acceptOffer() {
+      if (!this.selectedRequest) return
+      router.post('/student/request/accept', {
+        request_id: this.selectedRequest.id,
+      }, {
+        onSuccess: () => { this.selectedRequest = null }
+      })
+    },
+  },
 }
 </script>
-
-
 
 <template>
   <div class="min-h-screen bg-slate-50 font-sans">
 
     <Navbar />
 
-    
     <TutoringSidebar
       v-model="sidebarOpen"
       v-model:activeItem="activeItem"
     />
 
-   
     <div class="flex items-center gap-2 px-6 pt-5 pb-3">
       <button
         @click="sidebarOpen = true"
@@ -71,13 +112,11 @@ export default {
       <span class="text-sm font-bold text-[#139aa2]">Tutoring &gt; Requests</span>
     </div>
 
-    <!-- start ng columns na 3 -->
     <div class="flex px-6 pb-6 gap-4 w-full overflow-x-hidden">
 
-      
+      <!-- Request List -->
       <div class="requestlist w-[310px] flex-shrink-0 flex flex-col gap-2">
 
-        
         <div class="flex gap-6 mb-2 mt-4">
           <button
             @click="activeTab = 'active'"
@@ -91,7 +130,6 @@ export default {
           >Rejected</button>
         </div>
 
-      
         <div class="relative mb-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"/>
@@ -99,38 +137,45 @@ export default {
           <input
             v-model="search"
             type="text"
-            placeholder="Search name"
+            placeholder="Search tutor name"
             class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-300 text-slate-600 placeholder-slate-400"
           />
         </div>
 
-        
+        <!-- Request Cards -->
         <div class="flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-200px)] pr-1">
 
-         
-          <div
-            @click="selectRequest(sampleRequest)"
-            class="bg-white rounded-xl p-3 cursor-pointer border-2 transition-all duration-200 shadow-sm hover:shadow-md"
-            :class="selectedRequest?.id === sampleRequest.id
-              ? 'border-teal-500'
-              : 'border-transparent hover:border-slate-200'"
-          >
-            <div class="flex items-center gap-2 mb-2">
-              <img src="/images/tutor.jpg" class="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-slate-200" alt="Oliver Martinez"/>
-              <span class="text-sm font-bold text-slate-800 truncate">STUDENT REQ</span>
-            </div>
-            <p class="text-xs text-slate-500 mb-0.5">Subject: <span class="font-bold text-slate-700">English</span></p>
-            <p class="text-xs text-slate-500 mb-1">Classes Requested: <span class="font-bold text-slate-700">10</span></p>
-            <p class="text-[10px] text-black font-bold text-right">Requested Date: <span class="font-medium text-slate-700">21-04-2025</span></p>
+          <div v-if="filteredRequests.length === 0" class="text-center text-xs text-slate-400 mt-6">
+            No requests found.
           </div>
 
+          <div
+            v-for="req in filteredRequests"
+            :key="req.id"
+            @click="selectRequest(req)"
+            class="bg-white rounded-xl p-3 cursor-pointer border-2 transition-all duration-200 shadow-sm hover:shadow-md"
+            :class="selectedRequest?.id === req.id ? 'border-teal-500' : 'border-transparent hover:border-slate-200'"
+          >
+            <div class="flex items-center gap-2 mb-2">
+              <img
+                :src="req.tutor.photo ?? '/images/tutor.jpg'"
+                class="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-slate-200"
+                :alt="req.tutor.username"
+              />
+              <span class="text-sm font-bold text-slate-800 truncate">{{ req.tutor.username }}</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-0.5">Subject: <span class="font-bold text-slate-700">{{ req.subject.subject_title }}</span></p>
+            <p class="text-xs text-slate-500 mb-1">Classes Requested: <span class="font-bold text-slate-700">{{ req.custom_class_count }}</span></p>
+            <p class="text-[10px] text-black font-bold text-right">
+              Requested Date: <span class="font-medium text-slate-700">{{ formatDate(req.created_at) }}</span>
+            </p>
+          </div>
         </div>
       </div>
 
-      
+      <!-- Detail Panel -->
       <div class="middlecontainer flex-1 min-w-0 flex justify-center">
 
-        
         <transition
           enter-active-class="transition-all duration-300 ease-out"
           enter-from-class="opacity-0 translate-y-2"
@@ -139,54 +184,54 @@ export default {
           leave-from-class="opacity-100 translate-y-0"
           leave-to-class="opacity-0 translate-y-2"
         >
-          <div v-if="selectedRequest" class="middlecontainer bg-white h-130 w-150 shadow-sm p-6 items-start justify-center">
-            
+          <div v-if="selectedRequest" class="bg-white h-130 w-150 shadow-sm p-6 items-start justify-center">
+
             <div class="flex items-start justify-between mb-5">
               <div class="flex items-center gap-3">
-                <img src="/images/tutor.jpg" class="w-10 h-10 rounded-full object-cover border border-slate-200" alt="Student"/>
-                <span class="text-sm font-semibold text-slate-700">Student Name</span>
+                <img
+                  :src="selectedRequest.tutor.photo ?? '/images/tutor.jpg'"
+                  class="w-10 h-10 rounded-full object-cover border border-slate-200"
+                  :alt="selectedRequest.tutor.username"
+                />
+                <span class="text-sm font-semibold text-slate-700">{{ selectedRequest.tutor.username }}</span>
               </div>
               <button @click="selectedRequest = null" class="text-slate-400 hover:text-slate-600 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
               </button>
             </div>
 
-           
             <div class="flex flex-col gap-3 mb-4">
               <div class="flex items-center gap-2">
                 <span class="text-sm text-black font-bold">Requested Date:</span>
-                <span class="text-sm text-slate-600">{{ selectedRequest.requestedDate }}</span>
+                <span class="text-sm text-slate-600">{{ formatDate(selectedRequest.created_at) }}</span>
               </div>
               <div class="flex items-center gap-2">
                 <span class="text-sm text-black font-bold">Classes Requested:</span>
-                <span class="text-sm font-bold text-slate-800">{{ selectedRequest.classesRequested }}</span>
+                <span class="text-sm font-bold text-slate-800">{{ selectedRequest.custom_class_count }}</span>
               </div>
               <div class="flex items-center gap-2">
                 <span class="text-sm text-black font-bold">Subject:</span>
-                <span class="inline-block text-slate-700 text-sm px-4 py-0.5">{{ selectedRequest.subject }}</span>
+                <span class="inline-block text-slate-700 text-sm px-4 py-0.5">{{ selectedRequest.subject.subject_title }}</span>
               </div>
             </div>
 
             <hr class="border-slate-100 mb-4"/>
 
-           
             <p class="text-sm text-slate-600 leading-relaxed mb-8">{{ selectedRequest.message }}</p>
 
-            
             <div class="flex items-center gap-3 mt-30">
-              <button class="flex-1 py-2.5 rounded-xl border-2 border-slate-300 text-sm font-bold text-slate-600 hover:border-red-400 hover:text-red-500 transition-colors tracking-wider">
-                REJECT
+             <button @click="declineOffer" class="flex-1 py-2.5 rounded-xl border-2 border-slate-300 text-sm font-bold text-slate-600 hover:border-red-400 hover:text-red-500 transition-colors tracking-wider">
+                DECLINE
               </button>
-              <button class="flex-1 py-2.5 rounded-xl bg-[#139aa2] hover:bg-teal-600 text-sm font-bold text-white transition-colors shadow-sm tracking-wider">
-                MAKE AN OFFER
+              <button @click="acceptOffer" class="flex-1 py-2.5 rounded-xl bg-[#139aa2] hover:bg-teal-600 text-sm font-bold text-white transition-colors shadow-sm tracking-wider">
+                ACCEPT OFFER
               </button>
             </div>
           </div>
         </transition>
 
-       
         <div v-if="!selectedRequest" class="flex items-center justify-center h-64 text-slate-300">
           <div class="text-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -198,10 +243,8 @@ export default {
 
       </div>
 
-      
       <Ads/>
 
     </div>
   </div>
 </template>
-

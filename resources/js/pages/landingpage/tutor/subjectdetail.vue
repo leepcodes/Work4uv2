@@ -16,6 +16,7 @@ const props = defineProps<{
     five_class: number | null
     students: number
     tutor: {
+      id: number       
       uuid: string
       firstname: string
       lastname: string
@@ -29,7 +30,7 @@ const showCustomModal = ref(false)
 
 const form = useForm({
     subject_id: props.subject.id,
-    tutor_id: props.subject.tutor.uuid,
+    tutor_id: props.subject.tutor.id,  // ✅ was props.subject.tutor.uuid
     message: '',
     custom_class_count: null as number | null,
 })

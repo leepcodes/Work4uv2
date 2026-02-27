@@ -32,6 +32,11 @@ class TutorVerificationController extends Controller
         return Inertia::render('landingpage/tutor/tutorlanding');
     }
 
+      public function mystudents()
+    {
+        return Inertia::render('landingpage/tutor/mystudents');
+    }
+
     public function step1()
     {
         return Inertia::render('landingpage/tutor/step1', [

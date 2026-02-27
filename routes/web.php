@@ -26,6 +26,9 @@ Route::middleware(['authorization:student'])->group(function () {
 
     Route::get('/student/request', [RequestController::class, 'requests'])->name('student.request');
     Route::post('/subject/request', [RequestController::class, 'store'])->name('subject.request.store');
+    Route::post('/student/request/decline', [RequestController::class, 'declineOffer'])->name('student.request.decline');
+Route::post('/student/request/accept',  [RequestController::class, 'acceptOffer'])->name('student.request.accept');
+
 });
 
 // Tutor
@@ -49,7 +52,9 @@ Route::middleware(['authorization:tutor'])->group(function () {
     Route::post('/tutor/subjects/store', [SubjectController::class, 'store'])->name('tutor.subjects.store');
 
     Route::get('/tutor/request', [RequestController::class, 'tutorRequests'])->name('tutor.request');    
-    
+    Route::post('/tutor/request/offer', [RequestController::class, 'makeOffer'])->name('tutor.request.offer');
+
+    Route::get('/tutor/my-students', [TutorVerificationController::class, 'mystudents'])->name('tutor.mystudents');
 });
 
 // Register
