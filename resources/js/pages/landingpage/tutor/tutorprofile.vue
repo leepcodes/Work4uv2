@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { Head, Link, router } from '@inertiajs/vue3'
 import Navbar from '@/components/interfaces/navbar.vue'
 import Ads from '@/components/interfaces/ads.vue'
 
@@ -33,6 +33,27 @@ withDefaults(defineProps<{
 
 const activeTab = ref('Tutoring')
 const tabs = ['About Me', 'Tutoring', 'Webinars', 'E-learnings', 'Videos']
+
+let pollingInterval: ReturnType<typeof setInterval> | null = null
+
+const handleVisibility = () => {
+  if (document.visibilityState === 'visible') {
+    router.reload({ only: ['subjects'] })
+  }
+}
+
+onMounted(() => {
+  pollingInterval = setInterval(() => {
+    router.reload({ only: ['subjects'] })
+  }, 10000)
+
+  document.addEventListener('visibilitychange', handleVisibility)
+})
+
+onUnmounted(() => {
+  if (pollingInterval) clearInterval(pollingInterval)
+  document.removeEventListener('visibilitychange', handleVisibility)
+})
 </script>
 
 <template>

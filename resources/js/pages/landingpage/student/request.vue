@@ -37,6 +37,7 @@ export default {
       activeTab: 'active',
       search: '',
       selectedRequest: null as TutoringRequest | null,
+      pollingInterval: null as ReturnType<typeof setInterval> | null,
     }
   },
 
@@ -46,6 +47,21 @@ export default {
         r.tutor.username.toLowerCase().includes(this.search.toLowerCase())
       )
     },
+  },
+
+  mounted() {
+    this.pollingInterval = setInterval(() => {
+      router.reload({ only: ['requests'] })
+    }, 10000)
+
+    document.addEventListener('visibilitychange', this.handleVisibility)
+  },
+
+  unmounted() {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval)
+    }
+    document.removeEventListener('visibilitychange', this.handleVisibility)
   },
 
   watch: {
@@ -61,6 +77,12 @@ export default {
   },
 
   methods: {
+    handleVisibility() {
+      if (document.visibilityState === 'visible') {
+        router.reload({ only: ['requests'] })
+      }
+    },
+
     selectRequest(request: TutoringRequest) {
       this.selectedRequest = this.selectedRequest?.id === request.id ? null : request
     },
@@ -219,7 +241,7 @@ export default {
 
             <hr class="border-slate-100 mb-4"/>
 
-            <p class="text-sm text-slate-600 leading-relaxed mb-8">{{ selectedRequest.message }}</p>
+            <p class="text-sm text-slate-600 leading-relaxed mb-8">{{ selectedRequest.offer_message }}</p>
 
             <div class="flex items-center gap-3 mt-30">
              <button @click="declineOffer" class="flex-1 py-2.5 rounded-xl border-2 border-slate-300 text-sm font-bold text-slate-600 hover:border-red-400 hover:text-red-500 transition-colors tracking-wider">

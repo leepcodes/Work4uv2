@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\TutorRequest;
+use App\Models\Schedule;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -10,6 +11,21 @@ class RequestService
 {
     public function submitCustomRequest(array $data): void
     {
+        $existing = TutorRequest::where('student_id', auth()->id())
+            ->where('subject_id', $data['subject_id'])
+            ->whereIn('status', ['pending', 'offered'])
+            ->first();
+
+        if ($existing) {
+            if ($existing->status === 'pending') {
+                throw new \Exception('*You have already applied for this subject.');
+            }
+
+            if ($existing->status === 'offered') {
+                throw new \Exception('This subject already has an offer waiting for your response.');
+            }
+        }
+
         TutorRequest::create([
             'student_id'         => auth()->id(),
             'subject_id'         => $data['subject_id'],
@@ -25,11 +41,12 @@ class RequestService
     {
         return TutorRequest::with(['student', 'subject'])
             ->where('tutor_id', auth()->id())
-            ->whereIn('status', ['pending', 'offered']) // ✅ show both
+            ->whereIn('status', ['pending', 'offered']) 
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(fn ($req) => [
                 'id'                 => $req->id,
+                'offer_message'      => $req->offer_message,
                 'message'            => $req->message,
                 'custom_class_count' => $req->custom_class_count,
                 'created_at'         => $req->created_at,
@@ -46,8 +63,6 @@ class RequestService
             ->toArray();
     }
 
-   
-
     public function getStudentRequests(): array
     {
         return TutorRequest::with(['subject', 'tutor'])
@@ -58,6 +73,7 @@ class RequestService
             ->map(fn ($req) => [
                 'id'                 => $req->id,
                 'message'            => $req->message,
+                'offer_message'      => $req->offer_message,
                 'custom_class_count' => $req->custom_class_count,
                 'created_at'         => $req->created_at,
                 'status'             => $req->status,
@@ -80,7 +96,7 @@ class RequestService
             ->update([
                 'status'             => 'offered',
                 'tutor_custom_price' => $data['offer_price'],
-                'message'            => $data['offer_message'] ?? null,
+                'offer_message'            => $data['offer_message'] ?? null,
             ]);
     }
 
@@ -93,8 +109,19 @@ class RequestService
 
     public function acceptOffer(int $requestId): void
     {
-        TutorRequest::where('id', $requestId)
+        $request = TutorRequest::where('id', $requestId)
             ->where('student_id', auth()->id())
-            ->update(['status' => 'accepted']);
+            ->firstOrFail();
+
+        $request->update(['status' => 'accepted']);
+
+        Schedule::create([
+            'user_id'           => auth()->id(),
+            'tutor_id'          => $request->tutor_id,
+            'subject_id'        => $request->subject_id,
+            'class_count'       => $request->custom_class_count,
+            'available_date'    => now(),
+            'tutor_custom_price' => $request->tutor_custom_price,
+        ]);
     }
 }

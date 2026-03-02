@@ -14,6 +14,7 @@ interface TutoringRequest {
   custom_class_count: number
   created_at: string
   message: string
+  offer_message: string
   status: string
   tutor_custom_price?: number | null  
 }
@@ -39,6 +40,7 @@ export default {
       showOfferModal: false,
       offerPrice: null as number | null,
       offerMessage: '',
+      pollingInterval: null as ReturnType<typeof setInterval> | null,
     }
   },
 
@@ -48,6 +50,21 @@ export default {
         r.student.username.toLowerCase().includes(this.search.toLowerCase())
       )
     },
+  },
+
+  mounted() {
+    this.pollingInterval = setInterval(() => {
+      router.reload({ only: ['requests'] })
+    }, 10000)
+
+    document.addEventListener('visibilitychange', this.handleVisibility)
+  },
+
+  unmounted() {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval)
+    }
+    document.removeEventListener('visibilitychange', this.handleVisibility)
   },
 
   watch: {
@@ -63,6 +80,12 @@ export default {
   },
 
   methods: {
+    handleVisibility() {
+      if (document.visibilityState === 'visible') {
+        router.reload({ only: ['requests'] })
+      }
+    },
+
     selectRequest(request: TutoringRequest) {
       this.selectedRequest = this.selectedRequest?.id === request.id ? null : request
     },
@@ -235,7 +258,7 @@ export default {
                 </div>
 
                 <!-- BTM (offered status) -->
-                <div class="bg-white rounded-xl  w-150 shadow-sm p-6">
+                <div v-if="selectedRequest.status === 'offered'" class="bg-white rounded-xl  w-150 shadow-sm p-6">
                   <div class="flex flex-col gap-3 mb-4">
                     <div class="flex items-center gap-2">
                       <span class="text-sm text-black font-bold">Requested Date:</span>
@@ -252,7 +275,7 @@ export default {
                   </div>
 
                   <hr class="border-slate-100 mb-4"/>
-                  <p class="text-sm text-slate-600 leading-relaxed mb-4">{{ selectedRequest.message }}</p>
+                  <p class="text-sm text-slate-600 leading-relaxed mb-4">{{ selectedRequest.offer_message }}</p>
 
                   <div class="border border-slate-200 rounded-xl p-4">
                     <p class="text-sm font-semibold text-[#139aa2]">

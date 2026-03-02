@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tutor_id'); 
             $table->uuid('requestid'); 
             $table->text('message')->nullable();
+            $table->text('offer_message')->nullable();
             $table->integer('custom_class_count')->nullable();
             $table->decimal('tutor_custom_price', 10, 2)->nullable();
             $table->string('request_sched')->nullable();

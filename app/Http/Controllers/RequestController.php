@@ -41,9 +41,14 @@ class RequestController extends Controller
             'custom_class_count' => 'required|integer|min:1',
         ]);
 
-        $this->requestService->submitCustomRequest($validated);
-
-        return back()->with('success', 'Request submitted successfully!');
+        try {
+            $this->requestService->submitCustomRequest($validated);
+            return back()->with('success', 'Request submitted successfully!');
+        } catch (\Exception $e) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'custom_request' => $e->getMessage()
+            ]);
+        }
     }
     
     public function makeOffer(Request $request)

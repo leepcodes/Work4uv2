@@ -1,65 +1,24 @@
-<script lang="ts">
-export default {
-  name: 'TutoringSidebar',
+<script setup lang="ts">
+import { Link, usePage } from '@inertiajs/vue3';
 
-  props: {
-    modelValue: {
-      type: Boolean,
-      default: false
-    },
-    activeItem: {
-      type: String,
-      default: 'Home'
-    }
+const page = usePage();
+const role = (page.props.auth as any)?.role;
+
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false
   },
-
-  emits: ['update:modelValue', 'update:activeItem'],
-
-  data() {
-    return {
-      navItems: [
-        {
-          name: 'Home',
-          badge: null,
-          href: '/tutor/landing',
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>`
-        },
-        {
-          name: 'Requests',
-          badge: null,
-          href: '/tutor/request',
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`
-        },
-        {
-          name: 'Calendar',
-          badge: null,
-          
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`
-        },
-        {
-          name: 'My Students',
-          badge: '100',
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>`
-        },
-        {
-          name: 'My Subjects',
-          badge: null,
-          href: '/tutor/my-subject',
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`
-        }
-      ]
-    }
-  },
-
-  methods: {
-    close() {
-      this.$emit('update:modelValue', false)
-    },
-    setActive(name:string) {
-      this.$emit('update:activeItem', name)
-    }
+  activeItem: {
+    type: String,
+    default: 'Home'
   }
-}
+});
+
+const emit = defineEmits(['update:modelValue', 'update:activeItem']);
+
+const close = () => emit('update:modelValue', false);
+const setActive = (name: string) => emit('update:activeItem', name);
 </script>
 
 <template>
@@ -113,27 +72,61 @@ export default {
         </span>
       </div>
 
-      <!-- Nav Items -->
+     <!-- Nav Items -->
       <nav class="flex-1 px-3 py-2 flex flex-col gap-1">
-        <a
-          v-for="item in navItems"
-  :key="item.name"
-  :href="item.href || '#'"
-  class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
-  :class="activeItem === item.name
-    ? 'bg-teal-500 text-white shadow-sm'
-    : 'text-slate-500 hover:bg-teal-50 hover:text-teal-700'"
-  @click="item.href ? setActive(item.name) : ($event.preventDefault(), setActive(item.name))"
->
-          <span class="flex-shrink-0" v-html="item.icon"></span>
-          <span class="flex-1">{{ item.name }}</span>
-          <span
-            v-if="item.badge"
-            class="text-xs font-bold px-2 py-0.5 rounded-full"
-            :class="activeItem === item.name ? 'bg-white/25 text-white' : 'bg-teal-100 text-teal-700'"
-          >{{ item.badge }}</span>
-        </a>
-      </nav>
+
+          <!-- Home -->
+              <Link
+                :href="role === 'tutor' ? '/tutor/landing' : '/student'"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
+                :class="activeItem === 'Home' ? 'bg-teal-500 text-white shadow-sm' : 'text-slate-500 hover:bg-teal-50 hover:text-teal-700'"
+                @click="setActive('Home')"
+              >
+                Home
+              </Link>
+
+         <!-- Tutoring -->
+              <Link
+                :href="role === 'tutor' ? '/tutor/request' : '/student/request'"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
+                :class="activeItem === 'Tutoring' ? 'bg-teal-500 text-white shadow-sm' : 'text-slate-500 hover:bg-teal-50 hover:text-teal-700'"
+                @click="setActive('Tutoring')"
+              >
+                Request
+              </Link>
+
+              <!-- Calendar (Tutor / Student) -->
+               <Link
+                :href="role === 'tutor' ? '/tutor/calendar' : '/student/calendar'"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
+                :class="activeItem === 'Calendar' ? 'bg-teal-500 text-white shadow-sm' : 'text-slate-500 hover:bg-teal-50 hover:text-teal-700'"
+                @click="setActive('Calendar')"
+              >
+                Calendar WALA PA TO 
+              </Link>
+
+              <!-- Questions (Student only) -->
+              <Link
+                v-if="role === 'tutor'"
+                href="/student/mystudents"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
+                :class="activeItem === 'Questions' ? 'bg-teal-500 text-white shadow-sm' : 'text-slate-500 hover:bg-teal-50 hover:text-teal-700'"
+                @click="setActive('Questions')"
+              >
+                My Students
+              </Link>
+
+               <!-- My Subject (Student / Tutor ) -->
+               <Link
+                :href="role === 'tutor' ? '/tutor/create-subject' : '/student/myclasses'"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
+                :class="activeItem === 'My Subjects' ? 'bg-teal-500 text-white shadow-sm' : 'text-slate-500 hover:bg-teal-50 hover:text-teal-700'"
+                @click="setActive('My Subjects')"
+              >
+                My Subjects
+              </Link>
+
+            </nav>
     </aside>
   </transition>
 </template>

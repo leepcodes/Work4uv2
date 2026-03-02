@@ -5,11 +5,12 @@ use Inertia\Inertia;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Auth\StudentController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Auth\TutorVerificationController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TutorController;
+use App\Http\Controllers\ScheduleController;
 
 // Landing Page
 Route::get('/', function () {
@@ -27,8 +28,12 @@ Route::middleware(['authorization:student'])->group(function () {
     Route::get('/student/request', [RequestController::class, 'requests'])->name('student.request');
     Route::post('/subject/request', [RequestController::class, 'store'])->name('subject.request.store');
     Route::post('/student/request/decline', [RequestController::class, 'declineOffer'])->name('student.request.decline');
-Route::post('/student/request/accept',  [RequestController::class, 'acceptOffer'])->name('student.request.accept');
+    Route::post('/student/request/accept',  [RequestController::class, 'acceptOffer'])->name('student.request.accept');
 
+    // Class List
+    Route::get('/student/mystudents', [StudentController::class, 'tutorlist'])->name('student.mytutors');
+    Route::get('/student/myclasses', [ScheduleController::class, 'myclasses'])->name('student.classes');
+    Route::get('/student/tutorsandsubject', [StudentController::class, 'tutorandsubj'])->name('student.tutorsandsubject');
 });
 
 // Tutor
@@ -54,7 +59,6 @@ Route::middleware(['authorization:tutor'])->group(function () {
     Route::get('/tutor/request', [RequestController::class, 'tutorRequests'])->name('tutor.request');    
     Route::post('/tutor/request/offer', [RequestController::class, 'makeOffer'])->name('tutor.request.offer');
 
-    Route::get('/tutor/my-students', [TutorVerificationController::class, 'mystudents'])->name('tutor.mystudents');
 });
 
 // Register

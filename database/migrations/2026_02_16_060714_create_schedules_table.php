@@ -9,16 +9,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('schedules', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('tutor_id');
-            $table->unsignedBigInteger('subject_id');
-            $table->date('available_date');
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->boolean('is_available')->default(true);
-            $table->timestamps();
-        });
+      Schema::create('schedules', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('user_id');
+        $table->unsignedBigInteger('subject_id');
+        $table->unsignedBigInteger('tutor_id');
+        $table->decimal('tutor_custom_price', 10, 2);
+        $table->string('class_count');
+        $table->date('available_date')->nullable();
+        $table->timestamps();
+    });
     }
 
     public function down(): void

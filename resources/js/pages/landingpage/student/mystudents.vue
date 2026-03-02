@@ -1,21 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Navbar from '@/components/interfaces/navbar.vue'
-import TutoringSidebar from '@/components/interfaces/TutoringSidebar.vue'
+// import TutoringSidebar from '@/components/interfaces/TutoringSidebar.vue'
 import Ads from '@/components/interfaces/ads.vue'
 
 const sidebarOpen = ref(false)
 
-defineProps({
-  adBannerSrc: {
-    type: String,
-    default: '/images/adsbanner.png',
-  },
-  adBannerAlt: {
-    type: String,
-    default: 'Advertisement',
-  },
-})
+
 </script>
 
 <template>
@@ -227,4 +218,4 @@ defineProps({
     <Ads />
 
   </main>
-</template>
+</template>my

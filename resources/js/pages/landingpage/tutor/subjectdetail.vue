@@ -169,8 +169,12 @@ const submitCustomRequest = () => {
   <div v-if="showCustomModal" class="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl w-[520px] p-8">
       <h2 class="text-lg font-bold text-gray-800 text-center mb-6">Class Request</h2>
-
-      <div class="mb-4">
+      
+        <span v-if="(form.errors as any).custom_request" class="text-red-500 text-sm font0 self-center">
+          {{ (form.errors as any).custom_request }}
+        </span>
+        
+      <div class="mb-4 mt-2">
         <label class="text-sm text-gray-600 mb-1 block">Subject</label>
         <p class="text-sm font-medium text-gray-800 px-3 py-2 border border-gray-200 rounded-lg">{{ subject.title }}</p>
       </div>
@@ -197,6 +201,7 @@ const submitCustomRequest = () => {
       </div>
 
       <div class="flex justify-end gap-3">
+
         <button
           @click="showCustomModal = false; selectedPackage = null"
           class="px-5 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-50"
@@ -214,4 +219,5 @@ const submitCustomRequest = () => {
     </div>
   </div>
 
+  
 </template>
