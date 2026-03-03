@@ -52,8 +52,6 @@ class TutorVerificationRequest extends FormRequest
          return [
         
         'description' => ['required', 'string', 'max:2000'],
-
-       
         'id_front'    => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
         'id_back'     => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
         'cv_resume'   => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf,doc,docx', 'max:10240'],

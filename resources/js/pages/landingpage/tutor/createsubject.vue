@@ -1,29 +1,31 @@
 <script lang="ts">
 import Navbar from '@/components/interfaces/navbar.vue'
-import { Link as InertiaLink } from '@inertiajs/vue3';
-
-
-
+import { Link as InertiaLink, useForm } from '@inertiajs/vue3';
 
 export default {
   name: 'TutoringCreateSubject',
   components: { Navbar, InertiaLink },
 
+  setup() {
+    const form = useForm({
+      subject:     '',
+      description: '',
+      ageFrom:     '',
+      ageTo:       '',
+      price2:      '',
+      price3:      '',
+      price5:      '',
+      image:       null as File | null,
+    })
+
+    return { form }
+  },
+
   data() {
     return {
       previewImages: [] as string[],
-      form: {
-        subject:     '' as string,
-        description: '' as string,
-        ageFrom:     '' as string,
-        ageTo:       '' as string,
-        price2:      '' as string,
-        price3:      '' as string,
-        price5:      '' as string,
-      }
     }
   },
-  
 
   methods: {
     handleImageUpload(e: Event) {
@@ -31,7 +33,13 @@ export default {
       if (!input.files) return
       const files = Array.from(input.files)
       const remaining = 5 - this.previewImages.length
-      files.slice(0, remaining).forEach((file: File) => {
+
+      files.slice(0, remaining).forEach((file: File, idx: number) => {
+        // Only store the first uploaded file in form.image
+        if (idx === 0 && !this.form.image) {
+          this.form.image = file
+        }
+
         const reader = new FileReader()
         reader.onload = (ev: ProgressEvent<FileReader>) => {
           if (ev.target?.result) {
@@ -41,13 +49,24 @@ export default {
         reader.readAsDataURL(file)
       })
     },
+
     removeImage(index: number) {
       this.previewImages.splice(index, 1)
-    }
-  }
+      // Clear form image if the first one is removed
+      if (index === 0) {
+        this.form.image = null
+      }
+    },
 
-
-  
+    submit() {
+      this.form.post('/tutor/subjects/store', {
+        forceFormData: true,
+        onError: (errors) => {
+          console.error('Validation errors:', errors)
+        },
+      })
+    },
+  },
 }
 </script>
 
@@ -211,20 +230,24 @@ export default {
 
       </div>
 
-      <!-- ===== MIDDLE: BUTTONS ===== -->
+      
       <div class="w-[34%] h-full px-6 py-4 flex flex-col gap-3 pt-10 items-center">
         <button class="w-80 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-500 bg-white hover:bg-slate-50 transition-colors">
           Cancel
         </button>
-        <button class="w-80 py-2.5 rounded-xl bg-[#7dbfc4] hover:bg-[#139aa2] text-sm font-semibold text-white transition-colors shadow-sm">
-          Create Subject
+        <button
+          @click="submit"
+          :disabled="form.processing"
+          class="w-80 py-2.5 rounded-xl bg-[#7dbfc4] hover:bg-[#139aa2] text-sm font-semibold text-white transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ form.processing ? 'Creating...' : 'Create Subject' }}
         </button>
         <button class="w-80 py-2.5 rounded-xl border border-red-300 text-sm font-medium text-red-400 bg-white hover:bg-red-50 transition-colors">
           Delete Subject
         </button>
       </div>
 
-      <!-- ===== ADS SIDEBAR ===== -->
+      
       <aside class="hidden lg:flex flex-col flex-shrink-0 w-[200px] p-3">
         <div class="sticky top-[72px]">
           <img

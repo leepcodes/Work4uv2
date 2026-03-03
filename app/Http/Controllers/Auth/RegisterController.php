@@ -57,10 +57,10 @@ class RegisterController extends Controller
     ]);
     
     try {
-        // Create user (don't log in)
+       
         $user = $this->registrationService->register($validated);
         
-        // Redirect to login page with success message
+       
         return redirect()->route('login')
             ->with('success', 'Account created successfully! Please login.');
         
@@ -71,3 +71,4 @@ class RegisterController extends Controller
     }
 }
 }
+?>

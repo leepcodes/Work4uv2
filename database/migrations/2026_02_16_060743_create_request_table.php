@@ -13,14 +13,16 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('subject_id');
-            $table->unsignedBigInteger('tutor_id');
+            $table->unsignedBigInteger('tutor_id'); 
+            $table->uuid('requestid'); 
             $table->text('message')->nullable();
+            $table->text('offer_message')->nullable();
             $table->integer('custom_class_count')->nullable();
             $table->decimal('tutor_custom_price', 10, 2)->nullable();
             $table->string('request_sched')->nullable();
             $table->integer('class_avail')->nullable();
             $table->decimal('custom_class_price', 10, 2)->nullable();
-            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'offered'])->default('pending');
             $table->timestamps();
         });
     }

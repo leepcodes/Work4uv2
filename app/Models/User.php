@@ -9,7 +9,8 @@ class User extends Authenticatable
 {
     use HasFactory;
 
-    protected $fillable = [
+   protected $fillable = [
+        'uuid',
         'username',
         'email',
         'password',
@@ -23,11 +24,14 @@ class User extends Authenticatable
         'country',
         'city',
         'contact_number',
+        'photo',
         'service',
         'languages',
+        'subjects',      
         'certificates',
         'documents',
         'free_class',
+        'description',   
         'verification_step',
     ];
 
