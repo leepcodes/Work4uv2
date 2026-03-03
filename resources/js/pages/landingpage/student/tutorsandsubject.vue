@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref,  onMounted, onUnmounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 import Ads from '@/components/interfaces/ads.vue'
 import Navbar from '@/components/interfaces/navbar.vue'

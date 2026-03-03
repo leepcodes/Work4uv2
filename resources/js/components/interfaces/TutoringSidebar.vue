@@ -4,7 +4,7 @@ import { Link, usePage } from '@inertiajs/vue3';
 const page = usePage();
 const role = (page.props.auth as any)?.role;
 
-const props = defineProps({
+defineProps({
   modelValue: {
     type: Boolean,
     default: false
