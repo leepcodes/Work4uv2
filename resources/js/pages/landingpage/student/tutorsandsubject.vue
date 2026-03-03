@@ -19,7 +19,7 @@ interface Schedule {
   }
 }
 
-const props = defineProps<{
+defineProps<{
   classes: Schedule[]
 }>()
 
