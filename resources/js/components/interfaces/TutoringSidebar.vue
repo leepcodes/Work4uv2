@@ -106,19 +106,21 @@ const setActive = (name: string) => emit('update:activeItem', name);
               </Link>
 
               <!-- Questions (Student only) -->
+
               <Link
-                v-if="role === 'tutor'"
-                href="/student/mystudents"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
-                :class="activeItem === 'Questions' ? 'bg-teal-500 text-white shadow-sm' : 'text-slate-500 hover:bg-teal-50 hover:text-teal-700'"
-                @click="setActive('Questions')"
+                  :href="role === 'tutor' ? '/tutor/mystudents' : '/student/mytutor'"
+                  class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
+                  :class="activeItem === (role === 'tutor' ? 'My Students' : 'My Tutors') ? 'bg-teal-500 text-white shadow-sm' : 'text-slate-500 hover:bg-teal-50 hover:text-teal-700'"
+                  @click="setActive(role === 'tutor' ? 'My Students' : 'My Tutors')"
               >
-                My Students
+                  {{ role === 'tutor' ? 'My Students' : 'My Tutors' }}
               </Link>
+
+              
 
                <!-- My Subject (Student / Tutor ) -->
                <Link
-                :href="role === 'tutor' ? '/tutor/create-subject' : '/student/myclasses'"
+                :href="role === 'tutor' ? '/tutor/my-subject' : '/student/myclasses'"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
                 :class="activeItem === 'My Subjects' ? 'bg-teal-500 text-white shadow-sm' : 'text-slate-500 hover:bg-teal-50 hover:text-teal-700'"
                 @click="setActive('My Subjects')"

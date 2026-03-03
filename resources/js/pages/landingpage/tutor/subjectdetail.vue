@@ -4,6 +4,18 @@ import { Head, Link, useForm } from '@inertiajs/vue3'
 import Navbar from '@/components/interfaces/navbar.vue'
 import Ads from '@/components/interfaces/ads.vue'
 
+
+const showEnrollModal = ref(false)
+const paymentLoading = ref(false)
+const paymentSuccess = ref(false)
+const selectedPrice = ref<number | null>(null)
+
+const selectPackage = (type: string, price: number | null) => {
+    selectedPackage.value = type
+    selectedPrice.value = price
+    showEnrollModal.value = true
+}
+
 const props = defineProps<{
   subject: {
     id: number
@@ -44,6 +56,24 @@ const submitCustomRequest = () => {
         }
     })
 }
+
+const confirmEnrollment = () => {
+    paymentLoading.value = true
+
+    setTimeout(() => {
+        paymentLoading.value = false
+        paymentSuccess.value = true
+    }, 2000) // 2 second fake loading
+}
+
+const closeEnrollModal = () => {
+    showEnrollModal.value = false
+    paymentLoading.value = false
+    paymentSuccess.value = false
+    selectedPackage.value = null
+}
+
+
 </script>
 
 <template>
@@ -105,8 +135,9 @@ const submitCustomRequest = () => {
         <div class="mb-8 flex items-center justify-start rounded-xl p-4">
           <div class="flex gap-4 h-38 w-[100%]">
 
+            <!-- package 2 -->
             <div
-              @click="selectedPackage = '2'"
+              @click="selectPackage('2', subject.two_class)"
               class="flex-1 rounded-xl px-6 py-6 cursor-pointer transition-all text-center"
               :class="selectedPackage === '2' ? 'bg-teal-500' : 'bg-[#b2dfe1]'"
             >
@@ -114,9 +145,9 @@ const submitCustomRequest = () => {
               <p class="text-white text-sm font-semibold mb-4">USD {{ subject.two_class }}</p>
               <p class="text-white/70 text-sm leading-relaxed">{{ subject.students }}K Students have purchased this package</p>
             </div>
-
+            <!-- package 3 -->
             <div
-              @click="selectedPackage = '3'"
+              @click="selectPackage('3', subject.three_class)"
               class="flex-1 rounded-xl px-6 py-6 cursor-pointer transition-all text-center"
               :class="selectedPackage === '3' ? 'bg-purple-500' : 'bg-[#c8b8e8]'"
             >
@@ -124,9 +155,9 @@ const submitCustomRequest = () => {
               <p class="text-white text-sm font-semibold mb-4">USD {{ subject.three_class }}</p>
               <p class="text-white/70 text-sm leading-relaxed">{{ subject.students }}K Students have purchased this package</p>
             </div>
-
+            <!-- package 5 -->
             <div
-              @click="selectedPackage = '5'"
+              @click="selectPackage('5', subject.five_class)"
               class="flex-1 rounded-xl px-6 py-6 cursor-pointer transition-all text-center"
               :class="selectedPackage === '5' ? 'bg-violet-600' : 'bg-[#c4b5e8]'"
             >
@@ -219,5 +250,62 @@ const submitCustomRequest = () => {
     </div>
   </div>
 
-  
+  <!-- Enrollment & Mock Payment Modal -->
+<div v-if="showEnrollModal" class="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+  <div class="bg-white rounded-2xl shadow-xl w-[420px] p-8 text-center">
+
+    <!-- SUCCESS STATE -->
+    <div v-if="paymentSuccess">
+      <div class="text-green-500 text-5xl mb-4">✔</div>
+      <h2 class="text-lg font-bold text-gray-800 mb-2">Payment Successful!</h2>
+      <p class="text-sm text-gray-500 mb-6">
+        You are now enrolled in {{ selectedPackage }} classes.
+      </p>
+
+      <button
+        @click="closeEnrollModal"
+        class="px-6 py-2 rounded-lg bg-[#139aa2] text-white text-sm font-semibold hover:bg-teal-600"
+      >
+        Done
+      </button>
+    </div>
+
+    <!-- LOADING STATE -->
+    <div v-else-if="paymentLoading">
+      <div class="animate-spin rounded-full h-10 w-10 border-4 border-teal-500 border-t-transparent mx-auto mb-4"></div>
+      <h2 class="text-md font-semibold text-gray-700">Processing Payment...</h2>
+      <p class="text-xs text-gray-500 mt-2">Please wait</p>
+    </div>
+
+    <!-- CONFIRM STATE -->
+    <div v-else>
+      <h2 class="text-lg font-bold text-gray-800 mb-3">Confirm Enrollment</h2>
+      <p class="text-sm text-gray-600 mb-2">
+        Would you like to enroll in
+        <span class="font-semibold">{{ selectedPackage }} Classes</span>?
+      </p>
+
+      <p class="text-sm font-semibold text-gray-800 mb-6">
+        Total: USD {{ selectedPrice }}
+      </p>
+
+      <div class="flex justify-center gap-3">
+        <button
+          @click="closeEnrollModal"
+          class="px-5 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-50"
+        >
+          Cancel
+        </button>
+
+        <button
+          @click="confirmEnrollment"
+          class="px-5 py-2 rounded-lg bg-[#139aa2] text-white text-sm font-semibold hover:bg-teal-600"
+        >
+          Confirm & Pay
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
 </template>

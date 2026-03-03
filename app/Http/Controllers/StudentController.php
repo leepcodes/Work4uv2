@@ -35,9 +35,9 @@ class StudentController extends Controller
             'subjects' => $subjects,
         ]);
     }
-    public function tutorlist()
+    public function classdetails()
     {
-        return Inertia::render('landingpage/student/mystudents');
+        return Inertia::render('landingpage/student/classdetails');
     }
 
     public function tutorandsubj()

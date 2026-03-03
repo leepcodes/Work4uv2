@@ -116,12 +116,14 @@ class RequestService
         $request->update(['status' => 'accepted']);
 
         Schedule::create([
-            'user_id'           => auth()->id(),
-            'tutor_id'          => $request->tutor_id,
-            'subject_id'        => $request->subject_id,
-            'class_count'       => $request->custom_class_count,
-            'available_date'    => now(),
-            'tutor_custom_price' => $request->tutor_custom_price,
+            'user_id'               => auth()->id(),
+            'tutor_id'              => $request->tutor_id,
+            'subject_id'            => $request->subject_id,
+            'total_class_count'     => $request->custom_class_count,
+            'complete_class_count'  => 0,
+            'remaining_class_count' => $request->custom_class_count,
+            'available_date'        => now(),
+            'tutor_custom_price'    => $request->tutor_custom_price,
         ]);
     }
 }

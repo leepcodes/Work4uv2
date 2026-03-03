@@ -11,12 +11,21 @@ class ScheduleController extends Controller
         protected ScheduleService $scheduleService,
     ) {}
 
-    public function myclasses()
+    public function mytutor()
     {
-        $classes = $this->scheduleService->getStudentClasses();
+        $classes = $this->scheduleService->getTutorList();
 
-        return Inertia::render('landingpage/student/myclasses', [
+        return Inertia::render('landingpage/student/mytutor', [
             'classes' => $classes,
+        ]);
+    }
+
+     public function mystudent()
+    {
+        $students = $this->scheduleService->getTutorStudents();
+
+        return Inertia::render('landingpage/tutor/mystudents', [
+            'students' => $students,
         ]);
     }
 }

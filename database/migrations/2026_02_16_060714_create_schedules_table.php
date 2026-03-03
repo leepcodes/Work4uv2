@@ -15,7 +15,9 @@ return new class extends Migration
         $table->unsignedBigInteger('subject_id');
         $table->unsignedBigInteger('tutor_id');
         $table->decimal('tutor_custom_price', 10, 2);
-        $table->string('class_count');
+        $table->integer('total_class_count');
+        $table->integer('complete_class_count');
+        $table->integer('remaining_class_count');
         $table->date('available_date')->nullable();
         $table->timestamps();
     });
