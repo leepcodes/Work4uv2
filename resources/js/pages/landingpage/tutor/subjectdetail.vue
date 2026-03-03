@@ -4,17 +4,10 @@ import { Head, Link, useForm } from '@inertiajs/vue3'
 import Navbar from '@/components/interfaces/navbar.vue'
 import Ads from '@/components/interfaces/ads.vue'
 
-
 const showEnrollModal = ref(false)
 const paymentLoading = ref(false)
 const paymentSuccess = ref(false)
 const selectedPrice = ref<number | null>(null)
-
-const selectPackage = (type: string, price: number | null) => {
-    selectedPackage.value = type
-    selectedPrice.value = price
-    showEnrollModal.value = true
-}
 
 const props = defineProps<{
   subject: {
@@ -41,11 +34,23 @@ const selectedPackage = ref<string | null>(null)
 const showCustomModal = ref(false)
 
 const form = useForm({
+    // custom request fields
     subject_id: props.subject.id,
-    tutor_id: props.subject.tutor.id,  // ✅ was props.subject.tutor.uuid
+    tutor_id: props.subject.tutor.id,
     message: '',
     custom_class_count: null as number | null,
+    // package enroll fields
+    total_class_count: null as number | null,
+    tutor_custom_price: null as number | null,
 })
+
+const selectPackage = (type: string, price: number | null) => {
+    selectedPackage.value = type
+    selectedPrice.value = price
+    form.total_class_count = parseInt(type)
+    form.tutor_custom_price = price
+    showEnrollModal.value = true
+}
 
 const submitCustomRequest = () => {
     form.post('/subject/request', {
@@ -60,10 +65,15 @@ const submitCustomRequest = () => {
 const confirmEnrollment = () => {
     paymentLoading.value = true
 
-    setTimeout(() => {
-        paymentLoading.value = false
-        paymentSuccess.value = true
-    }, 2000) // 2 second fake loading
+    form.post('/subject/enroll', {
+        onSuccess: () => {
+            paymentLoading.value = false
+            paymentSuccess.value = true
+        },
+        onError: () => {
+            paymentLoading.value = false
+        }
+    })
 }
 
 const closeEnrollModal = () => {
@@ -71,9 +81,8 @@ const closeEnrollModal = () => {
     paymentLoading.value = false
     paymentSuccess.value = false
     selectedPackage.value = null
+    form.reset()
 }
-
-
 </script>
 
 <template>
@@ -145,6 +154,7 @@ const closeEnrollModal = () => {
               <p class="text-white text-sm font-semibold mb-4">USD {{ subject.two_class }}</p>
               <p class="text-white/70 text-sm leading-relaxed">{{ subject.students }}K Students have purchased this package</p>
             </div>
+
             <!-- package 3 -->
             <div
               @click="selectPackage('3', subject.three_class)"
@@ -155,6 +165,7 @@ const closeEnrollModal = () => {
               <p class="text-white text-sm font-semibold mb-4">USD {{ subject.three_class }}</p>
               <p class="text-white/70 text-sm leading-relaxed">{{ subject.students }}K Students have purchased this package</p>
             </div>
+
             <!-- package 5 -->
             <div
               @click="selectPackage('5', subject.five_class)"
@@ -166,6 +177,7 @@ const closeEnrollModal = () => {
               <p class="text-white/70 text-sm leading-relaxed">{{ subject.students }}K Students have purchased this package</p>
             </div>
 
+            <!-- custom request -->
             <div
               @click="selectedPackage = 'custom'; showCustomModal = true"
               class="flex-1 rounded-xl px-6 py-6 cursor-pointer transition-all flex items-center justify-center text-center"
@@ -200,11 +212,11 @@ const closeEnrollModal = () => {
   <div v-if="showCustomModal" class="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl w-[520px] p-8">
       <h2 class="text-lg font-bold text-gray-800 text-center mb-6">Class Request</h2>
-      
-        <span v-if="(form.errors as any).custom_request" class="text-red-500 text-sm font0 self-center">
-          {{ (form.errors as any).custom_request }}
-        </span>
-        
+
+      <span v-if="(form.errors as any).custom_request" class="text-red-500 text-sm font-bold self-center">
+        {{ (form.errors as any).custom_request }}
+      </span>
+
       <div class="mb-4 mt-2">
         <label class="text-sm text-gray-600 mb-1 block">Subject</label>
         <p class="text-sm font-medium text-gray-800 px-3 py-2 border border-gray-200 rounded-lg">{{ subject.title }}</p>
@@ -232,7 +244,6 @@ const closeEnrollModal = () => {
       </div>
 
       <div class="flex justify-end gap-3">
-
         <button
           @click="showCustomModal = false; selectedPackage = null"
           class="px-5 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-50"
@@ -250,62 +261,59 @@ const closeEnrollModal = () => {
     </div>
   </div>
 
-  <!-- Enrollment & Mock Payment Modal -->
-<div v-if="showEnrollModal" class="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-  <div class="bg-white rounded-2xl shadow-xl w-[420px] p-8 text-center">
+  <!-- Enrollment & Payment Modal -->
+  <div v-if="showEnrollModal" class="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-xl w-[420px] p-8 text-center">
 
-    <!-- SUCCESS STATE -->
-    <div v-if="paymentSuccess">
-      <div class="text-green-500 text-5xl mb-4">✔</div>
-      <h2 class="text-lg font-bold text-gray-800 mb-2">Payment Successful!</h2>
-      <p class="text-sm text-gray-500 mb-6">
-        You are now enrolled in {{ selectedPackage }} classes.
-      </p>
-
-      <button
-        @click="closeEnrollModal"
-        class="px-6 py-2 rounded-lg bg-[#139aa2] text-white text-sm font-semibold hover:bg-teal-600"
-      >
-        Done
-      </button>
-    </div>
-
-    <!-- LOADING STATE -->
-    <div v-else-if="paymentLoading">
-      <div class="animate-spin rounded-full h-10 w-10 border-4 border-teal-500 border-t-transparent mx-auto mb-4"></div>
-      <h2 class="text-md font-semibold text-gray-700">Processing Payment...</h2>
-      <p class="text-xs text-gray-500 mt-2">Please wait</p>
-    </div>
-
-    <!-- CONFIRM STATE -->
-    <div v-else>
-      <h2 class="text-lg font-bold text-gray-800 mb-3">Confirm Enrollment</h2>
-      <p class="text-sm text-gray-600 mb-2">
-        Would you like to enroll in
-        <span class="font-semibold">{{ selectedPackage }} Classes</span>?
-      </p>
-
-      <p class="text-sm font-semibold text-gray-800 mb-6">
-        Total: USD {{ selectedPrice }}
-      </p>
-
-      <div class="flex justify-center gap-3">
+      <!-- SUCCESS STATE -->
+      <div v-if="paymentSuccess">
+        <div class="text-green-500 text-5xl mb-4">✔</div>
+        <h2 class="text-lg font-bold text-gray-800 mb-2">Payment Successful!</h2>
+        <p class="text-sm text-gray-500 mb-6">
+          You are now enrolled in {{ selectedPackage }} classes.
+        </p>
         <button
           @click="closeEnrollModal"
-          class="px-5 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-50"
+          class="px-6 py-2 rounded-lg bg-[#139aa2] text-white text-sm font-semibold hover:bg-teal-600"
         >
-          Cancel
-        </button>
-
-        <button
-          @click="confirmEnrollment"
-          class="px-5 py-2 rounded-lg bg-[#139aa2] text-white text-sm font-semibold hover:bg-teal-600"
-        >
-          Confirm & Pay
+          Done
         </button>
       </div>
-    </div>
 
+      <!-- LOADING STATE -->
+      <div v-else-if="paymentLoading">
+        <div class="animate-spin rounded-full h-10 w-10 border-4 border-teal-500 border-t-transparent mx-auto mb-4"></div>
+        <h2 class="text-md font-semibold text-gray-700">Processing Payment...</h2>
+        <p class="text-xs text-gray-500 mt-2">Please wait</p>
+      </div>
+
+      <!-- CONFIRM STATE -->
+      <div v-else>
+        <h2 class="text-lg font-bold text-gray-800 mb-3">Confirm Enrollment</h2>
+        <p class="text-sm text-gray-600 mb-2">
+          Would you like to enroll in
+          <span class="font-semibold">{{ selectedPackage }} Classes</span>?
+        </p>
+        <p class="text-sm font-semibold text-gray-800 mb-6">
+          Total: USD {{ selectedPrice }}
+        </p>
+        <div class="flex justify-center gap-3">
+          <button
+            @click="closeEnrollModal"
+            class="px-5 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          <button
+            @click="confirmEnrollment"
+            :disabled="form.processing"
+            class="px-5 py-2 rounded-lg bg-[#139aa2] text-white text-sm font-semibold hover:bg-teal-600 disabled:opacity-50"
+          >
+            {{ form.processing ? 'Processing...' : 'Confirm & Pay' }}
+          </button>
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>
 </template>

@@ -7,9 +7,11 @@ import TutoringSidebar from '@/components/interfaces/TutoringSidebar.vue'
 
 interface Schedule {
   id: number
-  class_count: number
+  total_class_count: number
+  complete_class_count: number
+  remaining_class_count: number
   available_date: string | null
-  tutor: {
+  student: {
     name: string
     photo: string | null
   }
@@ -19,16 +21,16 @@ interface Schedule {
 }
 
 const props = defineProps<{
-  classes: Schedule[]
+  students: Schedule[]
 }>()
 
 const sidebarOpen = ref(false)
 const activeItem = ref('Home')
 const search = ref('')
 
-const filteredClasses = computed(() =>
-  props.classes.filter(c =>
-    c.tutor.name.toLowerCase().includes(search.value.toLowerCase())
+const filteredStudents = computed(() =>
+  props.students.filter(c =>
+    c.student.name.toLowerCase().includes(search.value.toLowerCase())
   )
 )
 
@@ -36,13 +38,13 @@ let pollingInterval: ReturnType<typeof setInterval> | null = null
 
 const handleVisibility = () => {
   if (document.visibilityState === 'visible') {
-    router.reload({ only: ['classes'] })
+    router.reload({ only: ['students'] })
   }
 }
 
 onMounted(() => {
   pollingInterval = setInterval(() => {
-    router.reload({ only: ['classes'] })
+    router.reload({ only: ['students'] })
   }, 10000)
   document.addEventListener('visibilitychange', handleVisibility)
 })
@@ -63,7 +65,7 @@ onUnmounted(() => {
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
       </svg>
     </button>
-    <span class="text-sm font-bold text-[#139aa2]">Tutoring &gt; My Tutors</span>
+    <span class="text-sm font-bold text-[#139aa2]">Tutoring &gt; My Students</span>
   </div>
 
   <main class="flex w-full h-full items-start justify-start bg-white">
@@ -76,31 +78,31 @@ onUnmounted(() => {
         <input
           v-model="search"
           type="text"
-          placeholder="Search tutor name"
+          placeholder="Search student name"
           class="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-[#139aa2]"
         />
       </div>
 
-      <div v-if="filteredClasses.length === 0" class="text-center text-xs text-slate-400 mt-10">
-        No classes found.
+      <div v-if="filteredStudents.length === 0" class="text-center text-xs text-slate-400 mt-10">
+        No students found.
       </div>
 
       <div class="grid grid-cols-3 gap-4">
         <div
-          v-for="item in filteredClasses"
+          v-for="item in filteredStudents"
           :key="item.id"
           class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
         >
-          <!-- Tutor row -->
+          <!-- Student row -->
           <div class="flex items-center gap-3 mb-3">
             <div class="w-9 h-9 rounded-full bg-gray-200 overflow-hidden shrink-0">
               <img
-                :src="item.tutor.photo ?? '/images/tutor.jpg'"
-                :alt="item.tutor.name"
+                :src="item.student.photo ?? '/images/tutor.jpg'"
+                :alt="item.student.name"
                 class="w-full h-full object-cover"
               />
             </div>
-            <p class="text-sm font-semibold text-gray-800">{{ item.tutor.name }}</p>
+            <p class="text-sm font-semibold text-gray-800">{{ item.student.name }}</p>
           </div>
 
           <!-- Subject tag -->
@@ -112,8 +114,9 @@ onUnmounted(() => {
 
           <!-- Info -->
           <div class="flex flex-col gap-0.5 text-xs text-gray-500">
-            <p>Active Package<span class="font-bold text-gray-800">ON WORK</span></p>
-            <p>Remaining Classes<span class="font-bold text-gray-800">{{ item.class_count }}</span></p>
+            <p>Remaining Classes <span class="font-bold text-gray-800">{{ item.remaining_class_count }}</span></p>
+            <p>Total Classes <span class="font-bold text-gray-800">{{ item.total_class_count }}</span></p>
+            <p>Completed <span class="font-bold text-gray-800">{{ item.complete_class_count }}</span></p>
             <p>Next Class <span class="font-bold text-gray-800">{{ item.available_date ?? 'Not set' }}</span></p>
           </div>
         </div>

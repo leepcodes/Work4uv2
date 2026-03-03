@@ -29,14 +29,13 @@ Route::middleware(['authorization:student'])->group(function () {
     Route::post('/subject/request', [RequestController::class, 'store'])->name('subject.request.store');
     Route::post('/student/request/decline', [RequestController::class, 'declineOffer'])->name('student.request.decline');
     Route::post('/student/request/accept',  [RequestController::class, 'acceptOffer'])->name('student.request.accept');
-
+    // Package enrollment
+    Route::post('/subject/enroll', [ScheduleController::class, 'enroll'])->name('subject.enroll');
     // Class List
     Route::get('/student/class-details', [StudentController::class, 'classdetails'])->name('student.class-details');
 
     Route::get('/student/mytutor', [ScheduleController::class, 'mytutor'])->name('student.mytutor');
 
-
- 
     //STUDENT AND SUBJECT 
     Route::get('/student/tutorsandsubject', [StudentController::class, 'tutorandsubj'])->name('student.tutorsandsubject');
 });
@@ -64,7 +63,7 @@ Route::middleware(['authorization:tutor'])->group(function () {
     Route::get('/tutor/request', [RequestController::class, 'tutorRequests'])->name('tutor.request');    
     Route::post('/tutor/request/offer', [RequestController::class, 'makeOffer'])->name('tutor.request.offer');
 
-    Route::get('/student/mystudent', [ScheduleController::class, 'mystudent'])->name('student.mystudent');
+    Route::get('/tutor/mystudents', [ScheduleController::class, 'mystudents'])->name('tutor.mystudent');
 
 });
 
