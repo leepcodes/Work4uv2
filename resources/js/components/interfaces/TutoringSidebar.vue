@@ -102,7 +102,7 @@ const setActive = (name: string) => emit('update:activeItem', name);
                 :class="activeItem === 'Calendar' ? 'bg-teal-500 text-white shadow-sm' : 'text-slate-500 hover:bg-teal-50 hover:text-teal-700'"
                 @click="setActive('Calendar')"
               >
-                Calendar WALA PA TO 
+                Calendar
               </Link>
 
               <!-- Questions (Student only) -->

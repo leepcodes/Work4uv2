@@ -12,23 +12,27 @@ class RequestController extends Controller
         protected RequestService $requestService,
     ) {}
 
-    public function requests()
+    public function requests(Request $request)
     {
-        $requests = $this->requestService->getStudentRequests();
+        $status = $request->query('status', 'offered');
+        $requests = $this->requestService->getStudentRequests($status);
 
         return Inertia::render('landingpage/student/request', [
             'requests' => $requests,
+            'role'     => 'student',
         ]);
     }
 
-   public function tutorRequests(Request $request)
+    public function tutorRequests(Request $request)
     {
         $status = $request->query('status', 'pending');
+        $statuses = $status === 'pending' ? ['pending', 'offered'] : [$status];
 
-        $requests = $this->requestService->getTutorRequests($status);
+        $requests = $this->requestService->getTutorRequests($statuses);
 
         return Inertia::render('landingpage/tutor/request', [
             'requests' => $requests,
+            'role'     => 'tutor',
         ]);
     }
 
@@ -36,7 +40,7 @@ class RequestController extends Controller
     {
         $validated = $request->validate([
             'subject_id'         => 'required|integer',
-            'tutor_id'           => 'required|integer', 
+            'tutor_id'           => 'required|integer',
             'message'            => 'nullable|string',
             'custom_class_count' => 'required|integer|min:1',
         ]);
@@ -50,7 +54,7 @@ class RequestController extends Controller
             ]);
         }
     }
-    
+
     public function makeOffer(Request $request)
     {
         $validated = $request->validate([
