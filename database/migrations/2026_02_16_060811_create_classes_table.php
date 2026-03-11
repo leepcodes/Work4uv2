@@ -11,12 +11,14 @@ return new class extends Migration
     {
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('request_id')->unique();
+            $table->uuid('uuid')->unique();
+            $table->unsignedBigInteger('request_id');
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('tutor_id');
-            $table->unsignedBigInteger('schedule_id')->unique();
-            $table->integer('session_count')->default(0);
-            $table->enum('status', ['null', 'failed', 'completed'])->default('null');
+            $table->unsignedBigInteger('schedule_id');
+            $table->integer('class_number');
+            $table->dateTime('scheduled_at')->nullable();
+            $table->enum('status', [ 'to_be_scheduled','upcoming','done','failed','completed'])->default('to_be_scheduled');
             $table->timestamp('started_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();

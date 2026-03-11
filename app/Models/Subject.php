@@ -8,7 +8,7 @@ class Subject extends Model
 {
         
     protected $fillable = [
-         'uuid',
+        'uuid',
         'tutor_id',
         'subject_title',
         'class_start',

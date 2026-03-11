@@ -11,6 +11,7 @@ return new class extends Migration
     {
       Schema::create('schedules', function (Blueprint $table) {
         $table->id();
+        $table->uuid('uuid')->unique();
         $table->unsignedBigInteger('user_id');
         $table->unsignedBigInteger('subject_id');
         $table->unsignedBigInteger('tutor_id');
@@ -18,6 +19,7 @@ return new class extends Migration
         $table->integer('total_class_count');
         $table->integer('complete_class_count');
         $table->integer('remaining_class_count');
+        $table->enum('status', ['scheduled', 'completed', 'upcoming', 'done'])->default('upcoming');
         $table->date('available_date')->nullable();
         $table->timestamps();
     });

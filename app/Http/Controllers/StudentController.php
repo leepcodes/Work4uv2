@@ -40,13 +40,6 @@ class StudentController extends Controller
         return Inertia::render('landingpage/student/classdetails');
     }
 
-    public function tutorandsubj()
-    {
-        $classes = $this->scheduleService->getStudentClasses();
-
-        return Inertia::render('landingpage/student/tutorsandsubject', [
-            'classes' => $classes,
-        ]);
-    }
+  
    
 }

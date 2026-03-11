@@ -37,46 +37,47 @@ class RequestService
         ]);
     }
 
-   public function getTutorRequests(string $status = 'pending'): array
+    public function getTutorRequests(array $statuses = ['pending', 'offered']): array
+        {
+            return TutorRequest::with(['student', 'subject'])
+                ->where('tutor_id', auth()->id())
+                ->whereIn('status', $statuses)
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(fn ($req) => [
+                    'id'                 => $req->id,
+                    'offer_message'      => $req->offer_message,
+                    'message'            => $req->message,
+                    'custom_class_count' => $req->custom_class_count,
+                    'created_at'         => $req->created_at,
+                    'status'             => $req->status,
+                    'tutor_custom_price' => $req->tutor_custom_price,
+                    'student' => [
+                        'username' => $req->student?->username,
+                        'photo'    => $req->student?->photo,
+                    ],
+                    'subject' => [
+                        'subject_title' => $req->subject?->subject_title,
+                    ],
+                ])
+                ->toArray();
+        }
+
+    public function getStudentRequests(string $status = 'offered'): array
     {
-        return TutorRequest::with(['student', 'subject'])
-            ->where('tutor_id', auth()->id())
-            ->whereIn('status', ['pending', 'offered']) 
+        return TutorRequest::with(['subject', 'tutor'])
+            ->where('student_id', auth()->id())
+            ->where('status', $status)
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(fn ($req) => [
                 'id'                 => $req->id,
-                'offer_message'      => $req->offer_message,
                 'message'            => $req->message,
+                'offer_message'      => $req->offer_message,
                 'custom_class_count' => $req->custom_class_count,
                 'created_at'         => $req->created_at,
                 'status'             => $req->status,
                 'tutor_custom_price' => $req->tutor_custom_price,
-                'student' => [
-                    'username' => $req->student?->username,
-                    'photo'    => $req->student?->photo,
-                ],
-                'subject' => [
-                    'subject_title' => $req->subject?->subject_title,
-                ],
-            ])
-            ->toArray();
-    }
-
-    public function getStudentRequests(): array
-    {
-        return TutorRequest::with(['subject', 'tutor'])
-            ->where('student_id', auth()->id())
-            ->where('status', 'offered')
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(fn ($req) => [
-                'id'                 => $req->id,
-                'message'            => $req->message,
-                'offer_message'      => $req->offer_message,
-                'custom_class_count' => $req->custom_class_count,
-                'created_at'         => $req->created_at,
-                'status'             => $req->status,
                 'tutor' => [
                     'username' => $req->tutor?->username,
                     'photo'    => $req->tutor?->photo
@@ -89,6 +90,7 @@ class RequestService
             ])
             ->toArray();
     }
+
     public function makeOffer(array $data): void
     {
         TutorRequest::where('id', $data['request_id'])
@@ -96,7 +98,7 @@ class RequestService
             ->update([
                 'status'             => 'offered',
                 'tutor_custom_price' => $data['offer_price'],
-                'offer_message'            => $data['offer_message'] ?? null,
+                'offer_message'      => $data['offer_message'] ?? null,
             ]);
     }
 

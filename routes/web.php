@@ -11,6 +11,8 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TutorController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\TutorSubjController;
+use App\Http\Controllers\CalendarController;
 
 // Landing Page
 Route::get('/', function () {
@@ -37,7 +39,11 @@ Route::middleware(['authorization:student'])->group(function () {
     Route::get('/student/mytutor', [ScheduleController::class, 'mytutor'])->name('student.mytutor');
 
     //STUDENT AND SUBJECT 
-    Route::get('/student/tutorsandsubject', [StudentController::class, 'tutorandsubj'])->name('student.tutorsandsubject');
+    Route::get('/student/tutorsandsubject/{uuid}', [ScheduleController::class, 'tutorandsubj'])->name('student.tutorsandsubject');
+    //CALENDAR
+    
+  
+
 });
 
 // Tutor
@@ -64,6 +70,19 @@ Route::middleware(['authorization:tutor'])->group(function () {
     Route::post('/tutor/request/offer', [RequestController::class, 'makeOffer'])->name('tutor.request.offer');
 
     Route::get('/tutor/mystudents', [ScheduleController::class, 'mystudents'])->name('tutor.mystudent');
+    //tutor subj
+    Route::get('/tutor/studentsubj/{uuid}', [ScheduleController::class, 'studentSubjects'])->name('tutor.student.subjects');
+  
+
+    Route::get('/tutor/studentsubj/{uuid}/package', [ScheduleController::class, 'packageClasses'])  ->name('tutor.student.package');    
+  
+    
+
+    //CALENDAR
+    Route::get('/tutor/calendar',              [CalendarController::class, 'index']);
+    Route::post('/tutor/calendar/slot',        [CalendarController::class, 'addSlot']);
+    Route::post('/tutor/calendar/dayoff',      [CalendarController::class, 'addDayOff']);
+    Route::delete('/tutor/calendar/{id}',      [CalendarController::class, 'destroy']);
 
 });
 

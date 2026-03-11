@@ -19,7 +19,7 @@ interface SubjectWithPackages {
   packages: Package[]
 }
 
-interface tutor {
+interface Student {
   id: number
   uuid: string
   name: string
@@ -27,18 +27,18 @@ interface tutor {
 }
 
 defineProps<{
-  tutor: { id: number; uuid: string; name: string; photo: string | null }
+  student: Student
   subjects: SubjectWithPackages[]
 }>()
 </script>
 
 <template>
   <SubjectPanel
-    role="student"
-    :person="tutor"
+    role="tutor"
+    :person="student"
     :subjects="subjects"
-    backPath="/student/tutorsandsubject"
-    backLabel="Tutors List"
-    breadcrumbLabel="Tutors & Subjects"
+    backPath="/tutor/mystudents"
+    backLabel="Students List"
+    breadcrumbLabel="Student & Subjects"
   />
 </template>
