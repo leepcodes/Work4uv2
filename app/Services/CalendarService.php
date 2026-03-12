@@ -47,4 +47,14 @@ class CalendarService
             ->where('tutor_id', Auth::id())
             ->delete();
     }
+
+    public function getTutorCalendar(int $tutorId): array
+    {
+        $calendar = Calendar::where('tutor_id', $tutorId)->get();
+
+        return [
+            'timeSlots' => $calendar->where('type', 'time_slot')->values(),
+            'daysOff'   => $calendar->where('type', 'day_off')->values(),
+        ];
+    }
 }

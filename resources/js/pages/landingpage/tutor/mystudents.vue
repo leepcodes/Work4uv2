@@ -19,15 +19,8 @@ defineProps<{ students: Schedule[] }>()
 </script>
 
 <template>
-  <div class="min-h-screen bg-white font-sans">
-    <Navbar />
-    <SidebarWithBtn breadcrumb="Tutoring &gt; My Students" />
-
-    <main class="flex w-full h-full items-start justify-start bg-white">
-      <div class="flex-1 h-full px-6 py-4">
-        <MyList :items="students" role="tutor" reloadKey="students" />
-      </div>
-      <Ads />
-    </main>
-  </div>
+    
+    <MyList :items="students" role="tutor" reloadKey="students" />
+  
+ 
 </template>

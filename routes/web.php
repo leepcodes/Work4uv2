@@ -26,24 +26,27 @@ Route::middleware(['authorization:student'])->group(function () {
     Route::get('/subject/{uuid}', [SubjectController::class, 'showmysubj'])->name('subject.show');
 
     // Request tutoring
-
     Route::get('/student/request', [RequestController::class, 'requests'])->name('student.request');
     Route::post('/subject/request', [RequestController::class, 'store'])->name('subject.request.store');
     Route::post('/student/request/decline', [RequestController::class, 'declineOffer'])->name('student.request.decline');
-    Route::post('/student/request/accept',  [RequestController::class, 'acceptOffer'])->name('student.request.accept');
+    Route::post('/student/request/accept', [RequestController::class, 'acceptOffer'])->name('student.request.accept');
+
     // Package enrollment
     Route::post('/subject/enroll', [ScheduleController::class, 'enroll'])->name('subject.enroll');
-    // Class List
-    Route::get('/student/class-details', [StudentController::class, 'classdetails'])->name('student.class-details');
 
+    
+
+    // My Tutor
     Route::get('/student/mytutor', [ScheduleController::class, 'mytutor'])->name('student.mytutor');
 
-    //STUDENT AND SUBJECT 
+    // Tutors & Subjects
     Route::get('/student/tutorsandsubject/{uuid}', [ScheduleController::class, 'tutorandsubj'])->name('student.tutorsandsubject');
-    //CALENDAR
-    
-  
 
+    // Student Package Classes
+    Route::get('/student/studentsubj/{uuid}/package', [ScheduleController::class, 'studentPackageClasses'])->name('student.package');
+    // CLASS DETAILS
+    Route::get('/student/classdetails/{uuid}/{classUuid}', [ScheduleController::class, 'studentClassDetails'])->name('student.class.details');
+    Route::get('/student/calendar-data/{uuid}', [ScheduleController::class, 'studentCalendarData'])->name('student.calendar.data');
 });
 
 // Tutor
@@ -52,38 +55,40 @@ Route::middleware(['authorization:tutor'])->group(function () {
     Route::get('/tutor', [TutorVerificationController::class, 'index'])->name('tutor.index');
     Route::get('/tutor/landing', [TutorVerificationController::class, 'landing'])->name('tutor.landing');
 
-    Route::get('/verification-step-1',  [TutorVerificationController::class, 'step1'])->name('tutor.verification-1');
+    Route::get('/verification-step-1', [TutorVerificationController::class, 'step1'])->name('tutor.verification-1');
     Route::post('/verification-step-1', [TutorVerificationController::class, 'step1Store'])->name('tutor.verification-1.store');
 
-    Route::get('/verification-step-2',  [TutorVerificationController::class, 'step2'])->name('tutor.verification-2');
+    Route::get('/verification-step-2', [TutorVerificationController::class, 'step2'])->name('tutor.verification-2');
     Route::post('/verification-step-2', [TutorVerificationController::class, 'step2Store'])->name('tutor.verification-2.store');
 
-    Route::get('/verification-step-3',  [TutorVerificationController::class, 'step3'])->name('tutor.verification-3');
+    Route::get('/verification-step-3', [TutorVerificationController::class, 'step3'])->name('tutor.verification-3');
     Route::post('/verification-step-3', [TutorVerificationController::class, 'step3Store'])->name('tutor.verification-3.store');
 
-    
     Route::get('/tutor/my-subject', [SubjectController::class, 'subject'])->name('tutor.subject');
     Route::get('/tutor/create-subject', [SubjectController::class, 'createsubject'])->name('tutor.create-subject');
     Route::post('/tutor/subjects/store', [SubjectController::class, 'store'])->name('tutor.subjects.store');
 
-    Route::get('/tutor/request', [RequestController::class, 'tutorRequests'])->name('tutor.request');    
+    Route::get('/tutor/request', [RequestController::class, 'tutorRequests'])->name('tutor.request');
     Route::post('/tutor/request/offer', [RequestController::class, 'makeOffer'])->name('tutor.request.offer');
 
     Route::get('/tutor/mystudents', [ScheduleController::class, 'mystudents'])->name('tutor.mystudent');
-    //tutor subj
+
+    // Tutor Student Subjects
     Route::get('/tutor/studentsubj/{uuid}', [ScheduleController::class, 'studentSubjects'])->name('tutor.student.subjects');
-  
 
-    Route::get('/tutor/studentsubj/{uuid}/package', [ScheduleController::class, 'packageClasses'])  ->name('tutor.student.package');    
-  
+    // Tutor Package Classes // ON WORK ULET
+    Route::get('/tutor/studentsubj/{uuid}/package', [ScheduleController::class, 'packageClasses'])->name('tutor.student.package');
+
+    // Calendar
+    Route::get('/tutor/calendar', [CalendarController::class, 'index']);
+    Route::post('/tutor/calendar/slot', [CalendarController::class, 'addSlot']);
+    Route::post('/tutor/calendar/dayoff', [CalendarController::class, 'addDayOff']);
+    Route::delete('/tutor/calendar/{id}', [CalendarController::class, 'destroy']);
     
-
-    //CALENDAR
-    Route::get('/tutor/calendar',              [CalendarController::class, 'index']);
-    Route::post('/tutor/calendar/slot',        [CalendarController::class, 'addSlot']);
-    Route::post('/tutor/calendar/dayoff',      [CalendarController::class, 'addDayOff']);
-    Route::delete('/tutor/calendar/{id}',      [CalendarController::class, 'destroy']);
-
+    //CLASS DETAILS
+    Route::get('/tutor/classdetails/{uuid}/{classUuid}', [ScheduleController::class, 'tutorClassDetails'])->name('tutor.class.details');
+    Route::get('/tutor/calendar-data', [ScheduleController::class, 'calendarData'])->name('tutor.calendar.data'); // CALENDAR POP UP DATA
+    Route::post('/classes/{uuid}/update', [ScheduleController::class, 'updateClass'])->name('classes.update');
 });
 
 // Register

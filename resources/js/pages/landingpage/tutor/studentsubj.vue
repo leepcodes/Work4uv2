@@ -4,6 +4,7 @@ import SubjectPanel from '@/pages/landingpage/sharedUI/subjectpanel.vue'
 interface Package {
   id: number
   uuid: string
+  package_number: number
   total_class_count: number
   complete_class_count: number
   remaining_class_count: number

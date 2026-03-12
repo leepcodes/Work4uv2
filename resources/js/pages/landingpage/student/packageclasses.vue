@@ -25,7 +25,7 @@ interface Subject {
   title: string
 }
 
-interface Student {
+interface Tutor {
   id: number
   uuid: string
   name: string
@@ -33,7 +33,7 @@ interface Student {
 }
 
 defineProps<{
-  student: Student
+  tutor: Tutor
   subject: Subject
   package: Package
   classes: ClassRow[]
@@ -42,8 +42,8 @@ defineProps<{
 
 <template>
   <PackageClasses
-    role="tutor"
-    :person="student"
+    role="student"
+    :person="tutor"
     :subject="subject"
     :package="package"
     :classes="classes"

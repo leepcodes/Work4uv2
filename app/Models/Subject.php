@@ -3,12 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Concerns\HasUuids; 
 class Subject extends Model
 {
-        
+    use HasUuids;
+
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
+
     protected $fillable = [
-        'uuid',
         'tutor_id',
         'subject_title',
         'class_start',
@@ -20,6 +25,7 @@ class Subject extends Model
         'three_class',
         'five_class',
     ];
+
     public function tutor()
     {
         return $this->belongsTo(User::class, 'tutor_id');

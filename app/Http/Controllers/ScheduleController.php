@@ -50,12 +50,26 @@ class ScheduleController extends Controller
         return back()->with('success', 'Enrolled successfully!');
     }
 
+    // TUTOR: package classes
     public function packageClasses(string $uuid)
     {
         $data = $this->scheduleService->getPackageClasses($uuid);
 
         return Inertia::render('landingpage/tutor/packageclasses', [
-            'student' => $data['student'],
+            'student' => $data['student'],  // ← wrong key name
+            'subject' => $data['subject'],
+            'package' => $data['schedule'],
+            'classes' => $data['classes'],
+        ]);
+    }
+
+    // STUDENT: package classes
+    public function studentPackageClasses(string $uuid)
+    {
+        $data = $this->scheduleService->getStudentPackageClasses($uuid);
+
+        return Inertia::render('landingpage/student/packageclasses', [
+            'tutor'   => $data['tutor'],
             'subject' => $data['subject'],
             'package' => $data['schedule'],
             'classes' => $data['classes'],
@@ -71,4 +85,58 @@ class ScheduleController extends Controller
             'subjects' => $data['subjects'],
         ]);
     }
+
+    // TUTOR: single class details
+   public function tutorClassDetails(string $uuid, string $classUuid)
+    {
+        $data = $this->scheduleService->getTutorClassDetails($uuid, $classUuid);
+        return Inertia::render('landingpage/tutor/classdetails', $data);
+    }
+
+    // STUDENT: single class details
+    public function studentClassDetails(string $uuid, int $classId)
+    {
+        $data = $this->scheduleService->getStudentClassDetails($uuid, $classId);
+
+         return Inertia::render('landingpage/student/classdetails', $data);
+    }
+
+    // TUTOR CALENDAR
+    
+    public function calendarData()
+    {
+        $data = $this->scheduleService->getTutorCalendarData();
+        return response()->json($data);
+    }
+
+    // STUDENT CALENDAR
+    public function studentCalendarData(string $uuid)
+    {
+        $data = $this->scheduleService->getStudentCalendarData($uuid);
+        return response()->json($data);
+    }
+
+    //POST SA CALENDAR
+
+    public function updateClass(Request $request, string $uuid)
+{
+        $request->validate([
+            'schedule'        => 'nullable|date',
+            'scheduled_time'  => 'nullable|string',
+            'video_link'      => 'nullable|string',
+            'notes'           => 'nullable|array',
+            'notes.*'         => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
+            'documents'       => 'nullable|array',
+            'documents.*'     => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
+        ]);
+
+        $this->scheduleService->updateClass(
+            $request->except('documents'),
+            $request->file() ?? [],
+            $uuid
+    );
+
+    return back()->with('success', 'Class saved successfully!');
+}
+
 }

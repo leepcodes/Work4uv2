@@ -31,7 +31,7 @@ class CalendarController extends Controller
     }
 
    public function addDayOff(Request $request)
-{
+    {
     $request->validate([
         'day_off_date' => 'required|string', // ← was 'required|date'
     ]);
@@ -39,7 +39,7 @@ class CalendarController extends Controller
     $this->calendarService->addDayOff($request->only('day_off_date', 'reason'));
 
     return back();
-}
+    }
 
     public function destroy(int $id)
     {
@@ -47,4 +47,7 @@ class CalendarController extends Controller
 
         return back();
     }
+
+
+
 }
