@@ -27,6 +27,14 @@ const notesFiles    = ref<File[]>([])
 const uploadedFiles = ref<File[]>([])
 const saving        = ref(false)
 
+// Existing saved files from DB (S3 paths as JSON)
+const existingNotes     = ref<string[]>(
+  props.classItem?.notes     ? JSON.parse(props.classItem.notes)     : []
+)
+const existingDocuments = ref<string[]>(
+  props.classItem?.documents ? JSON.parse(props.classItem.documents) : []
+)
+
 function handleNotesUpload(e: Event) {
   const input = e.target as HTMLInputElement
   if (input.files) notesFiles.value = [...notesFiles.value, ...Array.from(input.files)]
@@ -70,12 +78,28 @@ function save() {
 // ────────────────────────────────────────────────────────────
 
 // ── Calendar popup ──────────────────────────────────────────
-const showCalendar     = ref(false)
-const calLoading       = ref(false)
-const calStep          = ref<'calendar' | 'timeslot'>('calendar')
-const calDate          = ref(new Date())
-const scheduledDate    = ref<string | null>(props.classItem?.schedule ?? null)
-const scheduledTime    = ref<string | null>(null)
+const showCalendar  = ref(false)
+const calLoading    = ref(false)
+const calStep       = ref<'calendar' | 'timeslot'>('calendar')
+const calDate       = ref(new Date())
+
+// Parse existing scheduled_at → date + time
+const existingScheduledAt = props.classItem?.scheduled_at ?? null
+const scheduledDate = ref<string | null>(
+  existingScheduledAt
+    ? (existingScheduledAt.includes('T')
+        ? existingScheduledAt.split('T')[0]
+        : existingScheduledAt.split(' ')[0])
+    : null
+)
+const scheduledTime = ref<string | null>(
+  existingScheduledAt
+    ? (existingScheduledAt.includes('T')
+        ? existingScheduledAt.split('T')[1]?.slice(0, 8) ?? null
+        : existingScheduledAt.split(' ')[1]?.slice(0, 8) ?? null)
+    : null
+)
+
 const timeSlots        = ref<any[]>([])
 const daysOff          = ref<any[]>([])
 const selectedDateCell = ref<any>(null)
@@ -194,6 +218,7 @@ function backToCalendar() {
 
   <main class="flex w-full h-full items-start justify-start bg-white">
 
+    <!-- Left panel -->
     <div class="w-[25%] h-[100vh] px-6 py-4">
       <div class="flex items-center gap-3 mb-1">
         <div class="w-11 h-11 rounded-full bg-gray-200 overflow-hidden shrink-0">
@@ -214,6 +239,7 @@ function backToCalendar() {
       <p class="text-sm font-bold text-slate-800 mb-3">Package {{ packageIndex }}</p>
     </div>
 
+    <!-- Right panel -->
     <div class="w-[70%] h-[100vh] px-6 py-4">
       <div class="flex gap-6">
         <div class="flex flex-col gap-4 flex-1">
@@ -246,6 +272,29 @@ function backToCalendar() {
           <!-- Notes -->
           <div class="flex flex-col gap-2">
             <label class="text-sm text-gray-700">Notes</label>
+
+            <!-- Existing notes from DB -->
+            <div v-if="existingNotes.length > 0" class="flex flex-col gap-1">
+              <div v-for="(path, idx) in existingNotes" :key="'en-' + idx"
+                class="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2 shadow-sm">
+                <div class="flex items-center gap-3">
+                  <div class="bg-red-100 rounded p-1.5">
+                    <span class="text-red-500 text-xs font-bold">{{ path.split('.').pop()?.toUpperCase() }}</span>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-gray-800 truncate max-w-[180px]">{{ path.split('/').pop() }}</p>
+                  </div>
+                </div>
+                <button class="text-red-500 hover:text-red-600" @click="existingNotes.splice(idx, 1)">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+ 
+
+            <!-- Upload new notes -->
             <label class="cursor-pointer w-fit" title="Upload notes">
               <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" class="hidden" @change="handleNotesUpload"/>
               <div class="text-gray-400 hover:text-[#139aa2] transition-colors">
@@ -255,8 +304,9 @@ function backToCalendar() {
               </div>
             </label>
 
+            <!-- Newly selected notes (not yet saved) -->
             <div v-if="notesFiles.length > 0" class="flex flex-col gap-1">
-              <div v-for="(file, idx) in notesFiles" :key="idx"
+              <div v-for="(file, idx) in notesFiles" :key="'nf-' + idx"
                 class="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2 shadow-sm">
                 <div class="flex items-center gap-3">
                   <div class="bg-red-100 rounded p-1.5">
@@ -279,6 +329,29 @@ function backToCalendar() {
           <!-- Documents -->
           <div class="flex flex-col gap-2">
             <label class="text-sm text-gray-700">Documents</label>
+
+            <!-- Existing documents from DB -->
+            
+          <div v-if="existingDocuments.length > 0" class="flex flex-col gap-1">
+            <div v-for="(path, idx) in existingDocuments" :key="'ed-' + idx"
+              class="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2 shadow-sm">
+              <div class="flex items-center gap-3">
+                <div class="bg-red-100 rounded p-1.5">
+                  <span class="text-red-500 text-xs font-bold">{{ path.split('.').pop()?.toUpperCase() }}</span>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-gray-800 truncate max-w-[180px]">{{ path.split('/').pop() }}</p>
+                </div>
+              </div>
+              <button class="text-red-500 hover:text-red-600" @click="existingDocuments.splice(idx, 1)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+            <!-- Upload new documents -->
             <label class="border-2 border-dashed border-[#139aa2] rounded-lg p-6 flex flex-col items-center gap-1 text-center cursor-pointer hover:bg-teal-50 transition-colors">
               <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" class="hidden" @change="handleFileUpload"/>
               <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#139aa2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -290,8 +363,9 @@ function backToCalendar() {
               <p class="text-xs text-gray-400">Supports: JPG, PNG, PDF, DOC, DOCX</p>
             </label>
 
+            <!-- Newly selected documents (not yet saved) -->
             <div v-if="uploadedFiles.length > 0" class="flex flex-col gap-1">
-              <div v-for="(file, idx) in uploadedFiles" :key="idx"
+              <div v-for="(file, idx) in uploadedFiles" :key="'uf-' + idx"
                 class="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2 shadow-sm">
                 <div class="flex items-center gap-3">
                   <div class="bg-red-100 rounded p-1.5">
@@ -480,7 +554,7 @@ function backToCalendar() {
           <p class="text-xs text-gray-400">
             {{ scheduledTime
               ? `${scheduledDate} at ${formatTime(scheduledTime)}`
-              : 'Book a Class Select a Time Slot' }}
+              : 'Book a Class — Select a Time Slot' }}
           </p>
           <button
             :disabled="!scheduledTime"

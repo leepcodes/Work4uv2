@@ -3,9 +3,10 @@ import PackageClasses from '@/pages/landingpage/sharedUI/packageclasses.vue'
 
 interface ClassRow {
   id: number
+  uuid: string  
   label: string
   date: string | null
-  status: 'done' | 'upcoming' | 'to_be_scheduled' | 'schedulable'
+  status: 'to_be_scheduled' | 'upcoming' | 'done' | 'failed' | 'completed'
 }
 
 interface Package {

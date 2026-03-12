@@ -10,7 +10,7 @@ interface ClassRow {
   uuid: string  
   label: string
   date: string | null
-  status: 'done' | 'upcoming' | 'to_be_scheduled' | 'schedulable'
+  status: 'done' | 'upcoming' | 'to_be_scheduled' | 'schedulable' | 'failed' | 'completed'
 }
 
 interface Package {
@@ -136,12 +136,14 @@ onUnmounted(() => {
           :key="cls.id"
           @click="router.visit(`/${role}/classdetails/${package.uuid}/${cls.uuid}`)"
           :class="[
-            'flex items-center justify-between px-4 py-3 rounded-xl border cursor-pointer hover:shadow-sm transition-shadow',
-            cls.status === 'done' ? 'bg-green-50 border-green-100' :
-            cls.status === 'upcoming' ? 'bg-orange-50 border-orange-100' :
-            cls.status === 'to_be_scheduled' ? 'bg-[#EEEEFF] border-[#c7c7f5]' :
-            'bg-white border-slate-100'
-          ]"
+              'flex items-center justify-between px-4 py-3 rounded-xl border cursor-pointer hover:shadow-sm transition-shadow',
+              cls.status === 'done' ? 'bg-green-50 border-green-100' :
+              cls.status === 'upcoming' ? 'bg-orange-50 border-orange-100' :
+              cls.status === 'to_be_scheduled' ? 'bg-[#EEEEFF] border-[#c7c7f5]' :
+              cls.status === 'failed' ? 'bg-red-50 border-red-100' :
+              cls.status === 'completed' ? 'bg-green-50 border-green-100' :
+              'bg-white border-slate-100'
+            ]"
         >
           <div class="flex items-center gap-3">
             <div class="shrink-0">

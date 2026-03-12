@@ -67,7 +67,8 @@ class ScheduleController extends Controller
     public function studentPackageClasses(string $uuid)
     {
         $data = $this->scheduleService->getStudentPackageClasses($uuid);
-
+        
+        
         return Inertia::render('landingpage/student/packageclasses', [
             'tutor'   => $data['tutor'],
             'subject' => $data['subject'],
@@ -94,11 +95,11 @@ class ScheduleController extends Controller
     }
 
     // STUDENT: single class details
-    public function studentClassDetails(string $uuid, int $classId)
+  
+    public function studentClassDetails(string $uuid, string $classUuid)
     {
-        $data = $this->scheduleService->getStudentClassDetails($uuid, $classId);
-
-         return Inertia::render('landingpage/student/classdetails', $data);
+        $data = $this->scheduleService->getStudentClassDetails($uuid, $classUuid);
+        return Inertia::render('landingpage/student/classdetails', $data);
     }
 
     // TUTOR CALENDAR

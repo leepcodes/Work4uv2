@@ -27,14 +27,14 @@ const toggleProfileMenu = () => {
                 <div class="flex items-center">
                     <Link href="/" class="flex items-center">
                         <!-- Layered Logo Design -->
-                       <div class="flex items-center space-x-0.5">
-                            <img src="/images/work4ututor.png" alt="Work4U Logo" class="h-12 w-auto">
+                       <div class="flex items-center space-x-0.5 bg-[]">
+                            <img src="/images/work4ututor-logo.png" alt="Work4U Logo" class="h-12 w-auto">
                         </div>
                     </Link>
                 </div>
 
                 
-                <div class="hidden  px-10 gap-10 md:flex items-center space-x-8 justify-start self-center">
+                <div class="hidden  px-10 gap-3 md:flex items-center space-x-8 justify-start self-center">
                   <Link 
                         :href="role === 'tutor' ? '/tutor/landing' : '/student'"
                         class="font-inter text-[15px] font-normal text-black tracking-wider"
